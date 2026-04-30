@@ -2356,6 +2356,8 @@ async function generateCardsViaAI(topic, existing) {
     return generateCardsForTopic(topic, existing);
   }
 
+  // Use human-readable label for better AI topic understanding
+  const topicName = topicLabel(topic);
   const existingEnglish = existing.map(c => c.en);
   const existingStr = existingEnglish.slice(0, 40).join(", ") || "none";
   const dialectNote = {
@@ -2370,11 +2372,11 @@ async function generateCardsViaAI(topic, existing) {
 
   const prompt = `You are a Spanish language teacher creating flashcards for an adult English speaker.
 
-Topic: "${topic}"
+Topic: "${topicName}"
 Dialect: ${dialectNote}
 Already have (do NOT repeat): ${existingStr}
 
-Generate exactly 20 Spanish vocabulary flashcards for the topic "${topic}".
+Generate exactly 20 Spanish vocabulary flashcards for the topic "${topicName}".
 Choose words and phrases that are genuinely relevant and useful for this specific topic.
 
 Return ONLY a valid JSON array — no markdown, no explanation, no code fences.
@@ -2395,11 +2397,13 @@ Each object must have exactly:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "sonar",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.3,
+        model: "sonar-pro",
+        messages: [
+          { role: "system", content: "You are a Spanish language teacher. Always respond with valid JSON only. No markdown, no explanation, no code fences." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.2,
         max_tokens: 4000,
-        disable_search: true,
       }),
     });
 
@@ -2426,8 +2430,8 @@ Each object must have exactly:
     return cards;
 
   } catch (err) {
-    console.warn("Perplexity API error, falling back to local banks:", err);
-    showToast("AI generation failed — using local vocab", 3000);
+    console.warn("Perplexity API error:", err);
+    showToast(`⚠️ AI error: ${err.message} — using local vocab`, 4000);
     return generateCardsForTopic(topic, existing);
   }
 }
