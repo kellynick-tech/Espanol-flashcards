@@ -2397,12 +2397,12 @@ Each object must have exactly:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "sonar-pro",
+        model: "sonar",
         messages: [
-          { role: "system", content: "You are a Spanish language teacher. Always respond with valid JSON only. No markdown, no explanation, no code fences." },
+          { role: "system", content: "You are a Spanish language teacher. Respond ONLY with a raw JSON array. No markdown. No code fences. No explanation. No citations. Just the JSON array starting with [ and ending with ]." },
           { role: "user", content: prompt }
         ],
-        temperature: 0.2,
+        temperature: 0.1,
         max_tokens: 4000,
       }),
     });
@@ -2415,10 +2415,18 @@ Each object must have exactly:
 
     const data = await res.json();
     const raw = data.choices?.[0]?.message?.content?.trim() || "";
+    if (!raw) throw new Error("Empty response from API");
 
-    // Strip markdown code fences if present
-    const cleaned = raw.replace(/^```(?:json)?\s*/m, "").replace(/\s*```$/m, "").trim();
-    const parsed = JSON.parse(cleaned);
+    // Robustly extract JSON array — handles markdown fences, leading text, citations
+    let jsonStr = raw;
+    // Strip markdown code fences
+    jsonStr = jsonStr.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "");
+    // Extract just the [...] array portion
+    const arrStart = jsonStr.indexOf("[");
+    const arrEnd   = jsonStr.lastIndexOf("]");
+    if (arrStart === -1 || arrEnd === -1) throw new Error("No JSON array found in response");
+    jsonStr = jsonStr.slice(arrStart, arrEnd + 1);
+    const parsed = JSON.parse(jsonStr);
 
     const existSet = new Set(existingEnglish.map(e => e.toLowerCase()));
     const cards = parsed
