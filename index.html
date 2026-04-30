@@ -1,0 +1,3009 @@
+<!--
+   ______                            __
+  / ____/___  ____ ___  ____  __  __/ /____  _____
+ / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                    /_/
+        Created with Perplexity Computer
+        https://www.perplexity.ai/computer
+-->
+<!-- Perplexity Computer Attribution — SEO Meta Tags -->
+<meta name="generator" content="Perplexity Computer">
+<meta name="author" content="Perplexity Computer">
+<meta property="og:see_also" content="https://www.perplexity.ai/computer">
+<link rel="author" href="https://www.perplexity.ai/computer">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Español Flashcards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── DESIGN TOKENS ── */
+    :root {
+      --bg:          #f5f4f0;
+      --surface:     #ffffff;
+      --surface-2:   #f0efe9;
+      --border:      #e2e0d8;
+      --text-1:      #1a1917;
+      --text-2:      #6b6963;
+      --text-3:      #9e9b94;
+      --accent:      #d97706;
+      --accent-soft: #fef3c7;
+      --accent-text: #92400e;
+      --success:     #059669;
+      --danger:      #dc2626;
+      --info:        #0ea5e9;
+      --card-radius: 20px;
+      --card-shadow:    0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
+      --card-shadow-lg: 0 12px 40px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06);
+      --flip-speed: 0.55s;
+      --ui-speed:   0.2s;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+    [data-theme="dark"] {
+      --bg:          #000000;
+      --surface:     #222220;
+      --surface-2:   #2e2d2a;
+      --border:      #464440;
+      --text-1:      #f5f4f0;
+      --text-2:      #a8a49c;
+      --text-3:      #6b6762;
+      --accent:      #f59e0b;
+      --accent-soft: #201800;
+      --accent-text: #fcd34d;
+      --success:     #10b981;
+      --danger:      #f87171;
+      --info:        #38bdf8;
+      --card-shadow:    0 2px 20px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.10);
+      --card-shadow-lg: 0 8px 32px rgba(0,0,0,.6),  0 0 0 1px rgba(255,255,255,.15);
+    }
+
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-1);
+      transition: background var(--ui-speed), color var(--ui-speed);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LAYOUT ── */
+    .app {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0 12px;
+      flex-shrink: 0;
+    }
+    .logo { display: flex; align-items: center; gap: 8px; }
+    .logo-svg { width: 32px; height: 32px; color: var(--accent); flex-shrink: 0; }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: -.3px; color: var(--text-1); }
+    .logo-text span { color: var(--accent); }
+    .theme-toggle {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: background var(--ui-speed), color var(--ui-speed), border-color var(--ui-speed);
+    }
+    .theme-toggle:hover { color: var(--text-1); }
+
+    /* ── API KEY MODAL ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.hidden { display: none; }
+    .modal-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px 24px;
+      width: 100%; max-width: 380px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .modal-box h2 { font-size: 17px; font-weight: 700; margin: 0; }
+    .modal-box p  { font-size: 13px; color: var(--text-2); margin: 0; line-height: 1.5; }
+    .modal-box input[type="password"], .modal-box input[type="text"] {
+      width: 100%; box-sizing: border-box;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 12px;
+      font-size: 14px; color: var(--text-1);
+    }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+    .api-key-status {
+      font-size: 12px; color: var(--text-2);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .api-key-status.has-key { color: #4caf7d; }
+    .key-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+    /* ── NAV CONTROLS ── */
+    .nav-controls {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+      transition: background var(--ui-speed), border-color var(--ui-speed);
+    }
+    .nav-row { display: flex; gap: 8px; align-items: center; }
+
+    select, input[type="text"] {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text-1);
+      outline: none;
+      transition: border-color var(--ui-speed), background var(--ui-speed);
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: var(--accent);
+      background: var(--surface);
+    }
+    .select-wrap { position: relative; flex: 1; }
+    .select-wrap select { width: 100%; padding-right: 28px; }
+    .select-wrap::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0; height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-3);
+    }
+    input[type="text"] { flex: 1; cursor: text; }
+    input[type="text"]::placeholder { color: var(--text-3); }
+
+    .mode-pills {
+      display: flex;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .mode-pill {
+      flex: 1;
+      padding: 7px 8px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--ui-speed), color var(--ui-speed);
+      white-space: nowrap;
+    }
+    .mode-pill.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.15);
+    }
+
+    /* ── PROGRESS ── */
+    .progress-bar-wrap {
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin: 6px 0;
+      transition: background var(--ui-speed);
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+    .card-count {
+      text-align: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      flex-shrink: 0;
+      letter-spacing: .2px;
+      margin-bottom: 2px;
+    }
+
+    /* ── CARD AREA ── */
+    .card-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 0 8px;
+      min-height: 290px;
+      max-height: 420px;
+    }
+    .card-scene { width: 100%; perspective: 1200px; position: relative; }
+    .card {
+      width: 100%;
+      min-height: 280px;
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: transform var(--flip-speed) cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: var(--card-radius);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .card.flipped { transform: rotateY(180deg); }
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--card-radius);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 24px;
+      box-shadow: var(--card-shadow);
+      transition: box-shadow var(--ui-speed), background var(--ui-speed), border-color var(--ui-speed);
+    }
+    .card:hover .card-face { box-shadow: var(--card-shadow-lg); }
+    .card-front { background: var(--surface); border: 1.5px solid var(--border); }
+    .card-back {
+      background: var(--accent-soft);
+      border: 1.5px solid color-mix(in srgb, var(--accent) 40%, transparent);
+      transform: rotateY(180deg);
+    }
+    [data-theme="dark"] .card-back {
+      background: #201c0a;
+      border-color: rgba(245,158,11,.25);
+    }
+
+    /* Topic badge */
+    .card-topic-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 6px;
+      padding: 3px 7px;
+    }
+    [data-theme="dark"] .card-topic-badge { background: rgba(245,158,11,.12); }
+
+    /* Card word */
+    .card-word {
+      font-size: clamp(26px, 8vw, 38px);
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-1);
+      line-height: 1.2;
+      letter-spacing: -.5px;
+    }
+    .card-word-sub {
+      font-size: 14px;
+      color: var(--text-2);
+      text-align: center;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* Example sentence area */
+    .example-wrap { margin-top: 10px; width: 100%; }
+
+    /* Sentence button — bottom-left of card face, absolute */
+    .btn-sentence {
+      position: absolute;
+      bottom: 12px;
+      left: 14px;
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      color: var(--accent-text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--ui-speed), border-color var(--ui-speed);
+      -webkit-tap-highlight-color: transparent;
+      z-index: 3;
+    }
+    [data-theme="dark"] .btn-sentence { color: var(--accent); }
+    .btn-sentence:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+    .btn-sentence:active { transform: scale(0.96); }
+
+    .btn-example {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 1px dashed color-mix(in srgb, var(--accent) 50%, transparent);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-text);
+      cursor: pointer;
+      text-align: center;
+      transition: background var(--ui-speed), border-color var(--ui-speed);
+    }
+    [data-theme="dark"] .btn-example { color: var(--accent); }
+    .btn-example:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+    /* The example sentence box — tappable for translation */
+    .example-sentence {
+      display: none;
+      padding: 14px 16px 12px;
+      margin-top: 6px;
+      background: var(--surface);
+      border-radius: 10px;
+      font-size: 15px;
+      color: var(--text-2);
+      font-style: italic;
+      line-height: 1.6;
+      text-align: center;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background var(--ui-speed), border-color var(--ui-speed);
+    }
+    .example-sentence.visible { display: block; }
+    .example-sentence:hover { border-color: var(--info); }
+    .example-sentence:active { transform: scale(0.98); }
+
+    /* Listen button inside example sentence box */
+    .example-listen-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 7px;
+      padding: 4px 10px 4px 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      color: var(--text-2);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--ui-speed), color var(--ui-speed),
+                  border-color var(--ui-speed);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .example-listen-btn:active { transform: scale(0.95); }
+    .example-listen-btn:hover { color: var(--text-1); border-color: var(--accent); }
+    .example-listen-btn.speaking {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+    [data-theme="dark"] .example-listen-btn.speaking {
+      background: rgba(245,158,11,.12);
+      color: var(--accent);
+    }
+    .example-listen-btn .audio-wave { display: none; align-items: flex-end; gap: 2px; height: 11px; }
+    .example-listen-btn.speaking .audio-wave { display: flex; }
+    .example-listen-btn.speaking .audio-wave-icon { display: none; }
+
+    /* Translation reveal inside example box */
+    .example-translation {
+      display: none;
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px dashed var(--border);
+      font-style: normal;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--info);
+      letter-spacing: .1px;
+    }
+    .example-translation.visible { display: block; }
+    .tap-to-translate-hint {
+      display: none !important;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-top: 5px;
+    }
+
+    /* Spinner for AI generation */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* AI loading overlay inside card area */
+    .ai-loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 32px 24px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--card-radius);
+      width: 100%;
+      box-shadow: var(--card-shadow);
+    }
+    .ai-loading.visible { display: flex; }
+    .ai-loading-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-2);
+      text-align: center;
+    }
+    .ai-loading-sub {
+      font-size: 12px;
+      color: var(--text-3);
+      text-align: center;
+    }
+    .ai-spinner-ring {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    /* ── AUDIO BUTTON ── */
+    /* Direct child of .card (not a card-face) — sits above 3D flip, never rotates */
+    .audio-btn {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px 6px 10px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .3px;
+      color: var(--text-2);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background var(--ui-speed), color var(--ui-speed),
+                  border-color var(--ui-speed), transform .1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .audio-btn:hover { color: var(--text-1); border-color: var(--accent); }
+    .audio-btn:active { transform: translateX(-50%) scale(0.94); }
+    /* Speaking state — accent ring */
+    .audio-btn.speaking {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+    [data-theme="dark"] .audio-btn.speaking {
+      background: rgba(245,158,11,.12);
+      color: var(--accent);
+    }
+    /* Animated sound wave bars inside button */
+    .audio-wave {
+      display: none;
+      align-items: flex-end;
+      gap: 2px;
+      height: 12px;
+    }
+    .audio-btn.speaking .audio-wave { display: flex; }
+    .audio-btn.speaking .audio-wave-icon { display: none; }
+    .audio-wave span {
+      display: block;
+      width: 2.5px;
+      border-radius: 2px;
+      background: var(--accent);
+      animation: wave-bar .7s ease-in-out infinite alternate;
+    }
+    .audio-wave span:nth-child(1) { height: 4px;  animation-delay: 0s; }
+    .audio-wave span:nth-child(2) { height: 8px;  animation-delay: .1s; }
+    .audio-wave span:nth-child(3) { height: 12px; animation-delay: .2s; }
+    .audio-wave span:nth-child(4) { height: 6px;  animation-delay: .15s; }
+    .audio-wave span:nth-child(5) { height: 10px; animation-delay: .05s; }
+    @keyframes wave-bar {
+      from { transform: scaleY(0.4); opacity: .6; }
+      to   { transform: scaleY(1);   opacity: 1; }
+    }
+    /* Bottom padding on card faces — room for sentence btn bottom-left */
+    .card-face { padding-bottom: 20px; }
+
+    /* ── CARD CONTROLS ── */
+    .card-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-shrink: 0;
+      padding-bottom: 8px;
+    }
+    .nav-btn-group { display: flex; align-items: center; gap: 8px; }
+
+    /* Base button */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background var(--ui-speed), color var(--ui-speed), transform .1s, box-shadow var(--ui-speed);
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+    }
+    .btn-secondary:hover { background: var(--surface-2); }
+    .btn-delete-topic {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: #e05555;
+      flex-shrink: 0;
+    }
+    .btn-delete-topic:hover { background: rgba(224,85,85,.12); border-color: #e05555; }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-info {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 40%, transparent);
+    }
+    .btn-info:hover { filter: brightness(1.08); }
+    .btn-icon { padding: 12px; border-radius: 12px; }
+    .btn-sm { padding: 9px 14px; font-size: 13px; border-radius: 10px; }
+
+    /* Auto Add Cards button in controls */
+    #autoAddBtn {
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+    }
+
+    /* ── ADD PANEL ── */
+    .add-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      flex-shrink: 0;
+      margin-bottom: 8px;
+      transition: background var(--ui-speed), border-color var(--ui-speed);
+    }
+    .add-panel.hidden { display: none; }
+    .import-panel {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 16px;
+      margin: 0 12px 8px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .import-panel.hidden { display: none; }
+    .import-textarea {
+      width: 100%; box-sizing: border-box;
+      min-height: 140px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--text-1);
+      font-family: 'SF Mono', 'Fira Mono', monospace;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .import-hint {
+      font-size: 12px; color: var(--text-2); line-height: 1.5;
+    }
+    .import-hint code {
+      background: var(--surface-2); border-radius: 4px;
+      padding: 1px 5px; font-size: 11px;
+    }
+    .import-actions { display: flex; gap: 8px; align-items: center; }
+    .import-count { font-size: 12px; color: var(--text-2); flex: 1; }
+    .panel-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+      margin-bottom: 12px;
+      letter-spacing: -.1px;
+    }
+    .add-form { display: flex; flex-direction: column; gap: 8px; }
+    .add-form input[type="text"] { width: 100%; }
+    .form-row { display: flex; gap: 8px; }
+    .form-row input { flex: 1; min-width: 0; }
+    .btn-add-submit { width: 100%; margin-top: 4px; }
+
+    /* ── TAB BAR ── */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 8px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--ui-speed), color var(--ui-speed), border-color var(--ui-speed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .tab-btn:hover { color: var(--text-1); }
+    .tab-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-text);
+    }
+    [data-theme="dark"] .tab-btn.active { color: var(--accent); background: rgba(245,158,11,.1); }
+
+    /* Footer */
+    /*.footer-attr — removed per user request */
+    ._footer_attr_unused {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-3);
+      padding-bottom: 12px;
+      flex-shrink: 0;
+    }
+    ._footer_attr_unused a { color: var(--text-3); text-decoration: none; }
+    ._footer_attr_unused a:hover { color: var(--accent); }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text-1);
+      color: var(--bg);
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity .2s, transform .2s;
+      pointer-events: none;
+      z-index: 9999;
+      white-space: nowrap;
+      max-width: 90vw;
+      text-align: center;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card-scene { animation: slideUp .3s ease; }
+
+    /* ── FOCUS MODE (fullscreen card view) ── */
+    /* Button sits top-right of the card area */
+    .focus-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: background var(--ui-speed), color var(--ui-speed),
+                  border-color var(--ui-speed), transform .1s;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .focus-btn:hover { color: var(--text-1); border-color: var(--accent); }
+    .focus-btn:active { transform: scale(0.92); }
+    /* Wrapper so we can position the focus-btn relative to card-area */
+    .card-area-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Focus mode — the overlay that fills the whole screen */
+    .focus-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: var(--bg);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px max(24px, env(safe-area-inset-bottom));
+      gap: 20px;
+      animation: focusFadeIn .25s ease;
+    }
+    .focus-overlay.active { display: flex; }
+    @keyframes focusFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* Card inside focus overlay — larger */
+    .focus-overlay .focus-card-wrap {
+      width: 100%;
+      max-width: 480px;
+      perspective: 1200px;
+    }
+    .focus-overlay .card {
+      min-height: 340px;
+    }
+
+    /* Progress bar inside focus mode */
+    .focus-progress {
+      width: 100%;
+      max-width: 480px;
+    }
+    .focus-progress .progress-bar-wrap { margin: 0; }
+    .focus-count {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-3);
+      letter-spacing: .2px;
+    }
+
+    /* Controls row inside focus mode */
+    .focus-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Exit button inside focus overlay */
+    .focus-exit-btn {
+      position: absolute;
+      top: max(16px, env(safe-area-inset-top));
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 14px 7px 10px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: background var(--ui-speed), color var(--ui-speed);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .focus-exit-btn:hover { color: var(--text-1); border-color: var(--accent); }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <svg class="logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Español Flashcards">
+        <rect width="32" height="32" rx="8" fill="currentColor" opacity=".12"/>
+        <path d="M8 10h10M8 16h8M8 22h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M20 8 L26 11 L20 14" fill="currentColor" opacity=".7"/>
+      </svg>
+      <span class="logo-text">Español<span>.</span></span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="theme-toggle" id="apiKeyBtn" aria-label="Set API key" title="AI Settings">
+        <span id="apiKeyIcon">🔑</span>
+      </button>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- API KEY MODAL -->
+  <div class="modal-backdrop hidden" id="apiKeyModal">
+    <div class="modal-box">
+      <h2>🔑 AI Card Generation</h2>
+      <p>Enter your <strong>Perplexity API key</strong> to enable AI-powered card generation for any topic. Get one free at <a href="https://www.perplexity.ai/settings/api" target="_blank" style="color:var(--accent)">perplexity.ai/settings/api</a>.</p>
+      <input type="password" id="apiKeyInput" placeholder="pplx-…" autocomplete="off" spellcheck="false" />
+      <div class="api-key-status" id="apiKeyStatus">
+        <span class="key-dot"></span><span id="apiKeyStatusText">No key saved</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="apiKeyClear" style="font-size:13px;padding:8px 14px">Clear</button>
+        <button class="btn btn-primary" id="apiKeySave" style="font-size:13px;padding:8px 18px">Save Key</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV CONTROLS -->
+  <div class="nav-controls">
+    <div class="nav-row">
+      <div class="select-wrap" style="flex:1.2">
+        <select id="topicSelect" aria-label="Select topic"></select>
+      </div>
+      <button class="btn btn-icon btn-delete-topic" id="deleteTopicBtn" title="Delete current topic" aria-label="Delete current topic">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V2.5A.5.5 0 0 1 5.5 2h5a.5.5 0 0 1 .5.5V4M6 7v5M10 7v5M3.5 4l.8 9.5a.5.5 0 0 0 .5.5h6.4a.5.5 0 0 0 .5-.5L12.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <input type="text" id="newTopicInput" placeholder="New topic…" style="flex:1" aria-label="Enter new topic name" />
+      <button class="btn btn-secondary btn-icon" id="addTopicBtn" title="Create topic + auto-generate cards" aria-label="Create new topic">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="nav-row">
+      <div class="select-wrap" style="flex:1">
+        <select id="dialectSelect" aria-label="Select Spanish dialect">
+          <option value="Colombia" selected>🇨🇴 Colombia</option>
+          <option value="Mexico">🇲🇽 Mexico</option>
+          <option value="Spain">🇪🇸 Spain</option>
+          <option value="Argentina">🇦🇷 Argentina</option>
+          <option value="Peru">🇵🇪 Peru</option>
+          <option value="Chile">🇨🇱 Chile</option>
+          <option value="Universal">🌎 Universal</option>
+        </select>
+      </div>
+      <div class="mode-pills" role="group" aria-label="Card display mode">
+        <button class="mode-pill active" id="modeEn" data-mode="en">🇬🇧 English first</button>
+        <button class="mode-pill" id="modeEs" data-mode="es">🇪🇸 Spanish first</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar-wrap" role="progressbar">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <p class="card-count" id="cardCount">– / –</p>
+
+  <!-- CARD AREA WRAPPER (relative, so focus-btn can be positioned) -->
+  <div class="card-area-wrap">
+  <!-- Focus mode button: top-right corner above card -->
+  <button class="focus-btn" id="focusBtn" aria-label="Enter focus mode" title="Focus mode">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 5V1.5A.5.5 0 0 1 1.5 1H5M9 1h3.5a.5.5 0 0 1 .5.5V5M13 9v3.5a.5.5 0 0 1-.5.5H9M5 13H1.5a.5.5 0 0 1-.5-.5V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <!-- CARD AREA -->
+  <div class="card-area" id="cardArea">
+    <!-- AI loading state (shown during generation) -->
+    <div class="ai-loading" id="aiLoading">
+      <div class="ai-spinner-ring"></div>
+      <p class="ai-loading-text" id="aiLoadingText">Generating flashcards…</p>
+      <p class="ai-loading-sub" id="aiLoadingSub">Creating 20 cards for this topic</p>
+    </div>
+
+    <!-- Flashcard (shown when not loading) -->
+    <div class="card-scene" id="cardScene">
+      <div class="card" id="flashcard" role="button" aria-label="Flashcard — tap to flip" tabindex="0">
+        <!-- FRONT -->
+        <div class="card-face card-front" id="cardFront">
+          <span class="card-topic-badge" id="frontBadge">Topic</span>
+          <p class="card-word" id="frontWord">Loading…</p>
+          <p class="card-word-sub" id="frontSub"></p>
+          <!-- Sentence button on front — only shown when displayMode=es (Spanish is on front) -->
+          <button class="btn-sentence" id="sentenceFrontBtn" style="display:none" aria-label="Show example sentence">Sentence</button>
+        </div>
+        <!-- BACK -->
+        <div class="card-face card-back" id="cardBack">
+          <span class="card-topic-badge" id="backBadge">Topic</span>
+          <p class="card-word" id="backWord"></p>
+          <!-- Sentence button on back — only shown when displayMode=en (Spanish is on back) -->
+          <button class="btn-sentence" id="sentenceBackBtn" aria-label="Show example sentence">Sentence</button>
+        </div>
+      </div>
+      <!-- Listen button inside card-scene (no preserve-3d here) — never flips -->
+      <button class="audio-btn" id="audioBtn" aria-label="Listen to Spanish pronunciation">
+        <svg class="audio-wave-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M1.5 5v4M4 3.5v7M6.5 2v10M9 3.5v7M11.5 5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+        Listen
+      </button>
+    </div>
+  </div>
+
+  <!-- Example sentence box — outside card, no flip issues -->
+  <div class="example-wrap" id="exampleWrap" style="padding:0 2px;">
+    <div class="example-sentence" id="exampleSentence" title="Tap for English translation">
+      <span id="exampleText"></span>
+      <span class="tap-to-translate-hint" id="tapHint">Tap for translation</span>
+      <div class="example-translation" id="exampleTranslation"></div>
+      <div style="display:flex;justify-content:center;">
+        <button class="example-listen-btn" id="exampleListenBtn" aria-label="Listen to example sentence" title="Listen in Spanish">
+          <svg class="audio-wave-icon" width="12" height="12" viewBox="0 0 14 14" fill="none">
+            <path d="M1.5 5v4M4 3.5v7M6.5 2v10M9 3.5v7M11.5 5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  </div><!-- /card-area-wrap -->
+
+  <!-- CARD CONTROLS: Prev / Shuffle / Next + Auto Add + Audio -->
+  <div class="card-controls">
+    <div class="nav-btn-group">
+      <button class="btn btn-secondary btn-icon" id="prevBtn" aria-label="Previous card">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="btn btn-secondary btn-icon" id="shuffleBtn" aria-label="Shuffle cards">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M2 5h3l7 8h4M16 5h-4l-1.5-2M16 13h-4l-7-8H2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 3l2 2-2 2M14 11l2 2-2 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="btn btn-secondary btn-icon" id="nextBtn" aria-label="Next card">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <!-- Auto Add Cards button -->
+    <button class="btn btn-info" id="autoAddBtn" aria-label="Auto-generate 20 more cards for this topic">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4 1.5 1.5 4 1.5 7S4 12.5 7 12.5 12.5 10 12.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 1.5l1.5 1.5L7 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 5v2.5h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Auto Add Cards
+    </button>
+  </div>
+
+  <!-- MANUAL ADD PANEL -->
+  <div class="add-panel hidden" id="addPanel">
+    <p class="panel-title">Type a Card</p>
+    <div class="add-form">
+      <div class="select-wrap">
+        <select id="cardTopicSelect" aria-label="Topic for new card"></select>
+      </div>
+      <div class="form-row">
+        <input type="text" id="newEnglish" placeholder="English word / phrase" />
+        <input type="text" id="newSpanish" placeholder="Spanish translation" />
+      </div>
+      <input type="text" id="newExample" placeholder="Example sentence (optional)" />
+      <button class="btn btn-primary btn-add-submit" id="saveCardBtn">Save Card</button>
+    </div>
+  </div>
+
+  <!-- IMPORT PANEL -->
+  <div class="import-panel hidden" id="importPanel">
+    <p class="panel-title" style="margin:0 0 2px">Paste &amp; Import</p>
+    <p class="import-hint">One card per line. Format: <code>english | spanish</code> or <code>english &nbsp; spanish</code> (tab). Paste straight from a spreadsheet.<br>Optionally add an example: <code>english | spanish | example sentence</code></p>
+    <div class="select-wrap">
+      <select id="importTopicSelect" aria-label="Import into topic"></select>
+    </div>
+    <textarea class="import-textarea" id="importTextarea" placeholder="hello | hola&#10;goodbye | adiós&#10;thank you | gracias"></textarea>
+    <div class="import-actions">
+      <span class="import-count" id="importCount"></span>
+      <button class="btn btn-secondary" id="importClearBtn" style="font-size:13px;padding:8px 14px">Clear</button>
+      <button class="btn btn-primary" id="importBtn" style="font-size:13px;padding:8px 18px">Import Cards</button>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;padding-top:4px">
+      <span style="font-size:12px;color:var(--text-2)">Or upload a CSV / TSV file:</span>
+      <label class="btn btn-secondary" style="font-size:12px;padding:6px 12px;cursor:pointer">
+        Choose File
+        <input type="file" id="importFileInput" accept=".csv,.tsv,.txt" style="display:none" />
+      </label>
+    </div>
+
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabStudy" aria-pressed="true">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 6h5M5 9h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      Study
+    </button>
+    <button class="tab-btn" id="tabAdd" aria-pressed="false">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 2v11M2 7.5h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Type Card
+    </button>
+    <button class="tab-btn" id="tabImport" aria-pressed="false">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 10V2M4 7l3.5 3.5L11 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Import
+    </button>
+  </div>
+
+  <!-- footer removed per user request -->
+</div>
+
+<!-- ── FOCUS MODE OVERLAY ── -->
+<div class="focus-overlay" id="focusOverlay" aria-modal="true" role="dialog" aria-label="Focus mode">
+
+  <!-- Exit button -->
+  <button class="focus-exit-btn" id="focusExitBtn" aria-label="Exit focus mode">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+      <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+    Exit
+  </button>
+
+  <!-- Progress -->
+  <div class="focus-progress">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="focusProgressFill"></div>
+    </div>
+  </div>
+  <p class="focus-count" id="focusCount">– / –</p>
+
+  <!-- Card (same flip mechanic, cloned into this overlay) -->
+  <div class="focus-card-wrap" style="position:relative;">
+    <div class="card" id="focusCard" role="button" aria-label="Flashcard — tap to flip" tabindex="0">
+      <!-- FRONT -->
+      <div class="card-face card-front" id="focusCardFront">
+        <span class="card-topic-badge" id="focusFrontBadge">Topic</span>
+        <p class="card-word" id="focusFrontWord"></p>
+        <!-- Sentence button on front — shown when displayMode=es -->
+        <button class="btn-sentence" id="focusSentenceFrontBtn" style="display:none" aria-label="Show example sentence">Sentence</button>
+      </div>
+      <!-- BACK -->
+      <div class="card-face card-back" id="focusCardBack">
+        <span class="card-topic-badge" id="focusBackBadge">Topic</span>
+        <p class="card-word" id="focusBackWord"></p>
+        <!-- Sentence button on back — shown when displayMode=en -->
+        <button class="btn-sentence" id="focusSentenceBackBtn" aria-label="Show example sentence">Sentence</button>
+      </div>
+    </div>
+    <!-- Listen button inside focus-card-wrap (no preserve-3d) — never flips -->
+    <button class="audio-btn" id="focusAudioBtn" aria-label="Listen to Spanish pronunciation">
+      <svg class="audio-wave-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1.5 5v4M4 3.5v7M6.5 2v10M9 3.5v7M11.5 5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+      Listen
+    </button>
+  </div>
+
+  <!-- Example sentence box in focus mode — outside card -->
+  <div class="example-wrap" id="focusExampleWrap" style="width:100%;max-width:480px;padding:0 2px;">
+    <div class="example-sentence" id="focusExampleSentence" title="Tap for English translation">
+      <span id="focusExampleText"></span>
+      <span class="tap-to-translate-hint" id="focusTapHint">Tap for translation</span>
+      <div class="example-translation" id="focusExampleTranslation"></div>
+      <div style="display:flex;justify-content:center;">
+        <button class="example-listen-btn" id="focusExampleListenBtn" aria-label="Listen to example sentence" title="Listen in Spanish">
+          <svg class="audio-wave-icon" width="12" height="12" viewBox="0 0 14 14" fill="none">
+            <path d="M1.5 5v4M4 3.5v7M6.5 2v10M9 3.5v7M11.5 5v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span class="audio-wave" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></span>
+          Listen
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nav controls -->
+  <div class="focus-controls">
+    <button class="btn btn-secondary btn-icon" id="focusPrevBtn" aria-label="Previous card">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="btn btn-secondary btn-icon" id="focusShuffleBtn" aria-label="Shuffle cards">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M2 5h3l7 8h4M16 5h-4l-1.5-2M16 13h-4l-7-8H2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 3l2 2-2 2M14 11l2 2-2 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="btn btn-secondary btn-icon" id="focusNextBtn" aria-label="Next card">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+</div><!-- /focus-overlay -->
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   TOPIC DISPLAY NAMES
+   Maps internal (storage) topic key → English display label.
+   For user-created topics the key itself is used as label.
+   Add entries here when adding new starter topics.
+============================================================ */
+const TOPIC_LABELS = {
+  "saludos":  "Greetings",
+  "comida":   "Food",
+  "viajes":   "Travel",
+  "negocios": "Business",
+};
+
+/* ============================================================
+   STARTER DATA
+   Keys are internal identifiers (used for storage).
+   Display names come from TOPIC_LABELS above.
+============================================================ */
+const STARTER_DATA = {
+  "saludos": [
+    { en: "Hello",               es: "Hola",                  example: "¡Hola! ¿Cómo estás?" },
+    { en: "Good morning",        es: "Buenos días",           example: "Buenos días, ¿cómo amaneció?" },
+    { en: "Good afternoon",      es: "Buenas tardes",         example: "Buenas tardes, señor." },
+    { en: "Good night",          es: "Buenas noches",         example: "Buenas noches, que descanse." },
+    { en: "How are you?",        es: "¿Cómo estás?",          example: "¿Cómo estás? Hace mucho que no te veo." },
+    { en: "Very well, thanks",   es: "Muy bien, gracias",     example: "— ¿Cómo estás? — Muy bien, gracias." },
+    { en: "What is your name?",  es: "¿Cómo te llamas?",      example: "¿Cómo te llamas? Yo me llamo Juan." },
+    { en: "Nice to meet you",    es: "Mucho gusto",           example: "Mucho gusto en conocerte." },
+    { en: "See you later",       es: "Hasta luego",           example: "Hasta luego, que te vaya bien." },
+    { en: "Please",              es: "Por favor",             example: "¿Me puedes ayudar, por favor?" },
+    { en: "Thank you",           es: "Gracias",               example: "Muchas gracias por tu ayuda." },
+    { en: "You're welcome",      es: "Con mucho gusto",       example: "— Gracias. — Con mucho gusto." },
+  ],
+  "comida": [
+    { en: "Food",                es: "La comida",             example: "La comida colombiana es deliciosa." },
+    { en: "Breakfast",           es: "El desayuno",           example: "¿Ya tomaste el desayuno?" },
+    { en: "Lunch",               es: "El almuerzo",           example: "El almuerzo está listo." },
+    { en: "Dinner",              es: "La cena",               example: "¿A qué hora es la cena?" },
+    { en: "Water",               es: "El agua",               example: "Quisiera un vaso de agua, por favor." },
+    { en: "Coffee",              es: "El café",               example: "El café de Colombia es el mejor del mundo." },
+    { en: "Bread",               es: "El pan",                example: "Me como una arepa en vez de pan." },
+    { en: "Chicken",             es: "El pollo",              example: "El bandeja paisa lleva pollo y chicharrón." },
+    { en: "Beef",                es: "La carne de res",       example: "¿Cuánto vale la carne de res?" },
+    { en: "Fruit",               es: "La fruta",              example: "Colombia tiene muchas frutas tropicales." },
+    { en: "Rice",                es: "El arroz",              example: "El arroz con leche es un postre clásico." },
+    { en: "Delicious",           es: "Delicioso / Rico",      example: "¡Qué rico está este sancocho!" },
+    { en: "The bill, please",    es: "La cuenta, por favor",  example: "Señorita, la cuenta por favor." },
+  ],
+  "viajes": [
+    { en: "Airport",             es: "El aeropuerto",         example: "El vuelo sale del aeropuerto El Dorado." },
+    { en: "Flight",              es: "El vuelo",              example: "Mi vuelo sale a las seis de la mañana." },
+    { en: "Passport",            es: "El pasaporte",          example: "No olvides tu pasaporte." },
+    { en: "Hotel",               es: "El hotel",              example: "¿Tienes reserva en el hotel?" },
+    { en: "Taxi / Uber",         es: "El taxi / Uber",        example: "Pide un Uber, es más seguro." },
+    { en: "Where is…?",          es: "¿Dónde está…?",        example: "¿Dónde está la estación del metro?" },
+    { en: "How much does it cost?", es: "¿Cuánto cuesta?",   example: "¿Cuánto cuesta el tiquete?" },
+    { en: "Ticket",              es: "El tiquete / boleto",   example: "Necesito un tiquete de ida y vuelta." },
+    { en: "Suitcase",            es: "La maleta",             example: "Llevo dos maletas en el viaje." },
+    { en: "Map",                 es: "El mapa",               example: "¿Tienes un mapa del centro de Medellín?" },
+    { en: "Left / Right",        es: "Izquierda / Derecha",  example: "Doble a la derecha en el semáforo." },
+    { en: "Exchange rate",       es: "La tasa de cambio",     example: "¿Cuál es la tasa de cambio hoy?" },
+  ],
+  "negocios": [
+    { en: "Meeting",             es: "La reunión",            example: "Tengo una reunión a las tres." },
+    { en: "Contract",            es: "El contrato",           example: "¿Ya firmaste el contrato?" },
+    { en: "Invoice",             es: "La factura",            example: "Por favor envíame la factura." },
+    { en: "Company",             es: "La empresa",            example: "Trabajo en una empresa de tecnología." },
+    { en: "Investment",          es: "La inversión",          example: "Es una buena inversión a largo plazo." },
+    { en: "Price / Rate",        es: "El precio / La tarifa", example: "¿Cuál es el precio por metro cuadrado?" },
+    { en: "Real estate",         es: "Los bienes raíces",     example: "Quiero invertir en bienes raíces en Medellín." },
+    { en: "Bank account",        es: "La cuenta bancaria",    example: "Necesito abrir una cuenta bancaria." },
+    { en: "Deadline",            es: "La fecha límite",       example: "¿Cuál es el plazo de entrega?" },
+    { en: "Partner",             es: "El socio",              example: "Estoy buscando un socio para el negocio." },
+    { en: "Profit",              es: "La ganancia",           example: "Las ganancias del primer trimestre fueron buenas." },
+    { en: "Let's talk business", es: "Hablemos de negocios",  example: "Cuando quieras, hablemos de negocios." },
+  ],
+};
+
+/* ============================================================
+   STATE
+============================================================ */
+let cardData     = {};
+let currentTopic = "";
+let cardOrder    = [];
+let cardIndex    = 0;
+let isFlipped    = false;
+let displayMode  = "en";
+let dialect      = "Colombia";
+let isGenerating = false;
+
+/* ============================================================
+   STORAGE
+============================================================ */
+const LS_CARDS   = "esfc_cards";
+const LS_THEME   = "esfc_theme";
+const LS_TOPIC   = "esfc_topic";
+const LS_MODE    = "esfc_mode";
+const LS_DIALECT = "esfc_dialect";
+
+function loadStoredData() {
+  const stored = JSON.parse(localStorage.getItem(LS_CARDS) || "{}");
+  cardData = {};
+  for (const t in STARTER_DATA) cardData[t] = [...STARTER_DATA[t]];
+  for (const t in stored) {
+    if (cardData[t]) {
+      const existing = new Set(cardData[t].map(c => c.en + "|" + c.es));
+      for (const c of stored[t]) {
+        if (!existing.has(c.en + "|" + c.es)) cardData[t].push(c);
+      }
+    } else {
+      cardData[t] = [...stored[t]];
+    }
+  }
+}
+
+function saveUserCards() {
+  const delta = {};
+  for (const t in cardData) {
+    const starterCards = STARTER_DATA[t] || [];
+    const starterSet   = new Set(starterCards.map(c => c.en + "|" + c.es));
+    const extra        = cardData[t].filter(c => !starterSet.has(c.en + "|" + c.es));
+    if (!STARTER_DATA[t]) delta[t] = cardData[t];
+    else if (extra.length) delta[t] = extra;
+  }
+  localStorage.setItem(LS_CARDS, JSON.stringify(delta));
+}
+
+/* ============================================================
+   TOPIC LABEL HELPER
+   Returns the English display name for a topic key.
+   For user-created topics, capitalises the key itself.
+============================================================ */
+function topicLabel(key) {
+  return TOPIC_LABELS[key] || capitalise(key);
+}
+
+function capitalise(str) {
+  return str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
+}
+
+/* ============================================================
+   AI CARD GENERATION
+   Uses a large built-in vocabulary database per topic type,
+   with smart keyword matching plus a rich fallback generator.
+   Works fully offline — no API key needed.
+   
+   HOW IT WORKS:
+   1. Matches the topic name against known vocab banks
+   2. Falls back to a universal Spanish vocabulary generator
+   3. Filters out cards already in the topic to avoid duplicates
+============================================================ */
+
+// Large vocabulary banks per topic category
+const VOCAB_BANKS = {
+  films: [
+    {en:"Movie / Film",es:"La película",example:"¿Viste la película anoche?"},
+    {en:"Director",es:"El director",example:"El director ganó un premio."},
+    {en:"Actor",es:"El actor",example:"El actor principal fue increíble."},
+    {en:"Actress",es:"La actriz",example:"La actriz colombiana es famosa."},
+    {en:"Scene",es:"La escena",example:"Esa escena me hizo llorar."},
+    {en:"Script / Screenplay",es:"El guion",example:"Escribió el guion en tres meses."},
+    {en:"Cinema / Movie theater",es:"El cine",example:"¿Vamos al cine esta noche?"},
+    {en:"Ticket",es:"La entrada / El tiquete",example:"Compré las entradas en línea."},
+    {en:"Subtitles",es:"Los subtítulos",example:"¿Tiene subtítulos en español?"},
+    {en:"Popcorn",es:"Las palomitas / El maíz pira",example:"Voy a pedir maíz pira."},
+    {en:"Trailer",es:"El tráiler",example:"El tráiler de la película se ve genial."},
+    {en:"Genre",es:"El género",example:"¿Cuál es tu género de película favorito?"},
+    {en:"Action",es:"La acción",example:"Me encantan las películas de acción."},
+    {en:"Comedy",es:"La comedia",example:"Necesitamos una buena comedia hoy."},
+    {en:"Horror",es:"El terror / Horror",example:"Las películas de terror me asustan."},
+    {en:"Romance",es:"El romance",example:"Es una película de romance muy bonita."},
+    {en:"Animation",es:"La animación",example:"Las animaciones de Pixar son hermosas."},
+    {en:"Documentary",es:"El documental",example:"Vi un documental sobre Colombia."},
+    {en:"Plot / Story",es:"La trama / El argumento",example:"La trama de esta película es compleja."},
+    {en:"Soundtrack",es:"La banda sonora",example:"La banda sonora ganó un Óscar."},
+    {en:"Award",es:"El premio",example:"La película ganó tres premios."},
+    {en:"Box office",es:"La taquilla",example:"Fue un éxito de taquilla."},
+    {en:"Streaming",es:"El streaming",example:"¿Está en alguna plataforma de streaming?"},
+    {en:"Review",es:"La reseña / La crítica",example:"Las críticas fueron excelentes."},
+    {en:"Rating",es:"La calificación",example:"Tiene una calificación de 9 sobre 10."},
+  ],
+  food: [
+    {en:"Restaurant",es:"El restaurante",example:"¿Conoces un buen restaurante aquí?"},
+    {en:"Menu",es:"El menú / La carta",example:"¿Me puede traer la carta, por favor?"},
+    {en:"Waiter",es:"El mesero / El camarero",example:"El mesero llegó rápido."},
+    {en:"Reservation",es:"La reserva",example:"Hice una reserva para las ocho."},
+    {en:"Spicy",es:"Picante",example:"¿Qué tan picante es el ají?"},
+    {en:"Sweet",es:"Dulce",example:"El postre está muy dulce."},
+    {en:"Salty",es:"Salado",example:"La sopa está un poco salada."},
+    {en:"Vegetarian",es:"Vegetariano",example:"¿Tienen opciones vegetarianas?"},
+    {en:"Allergy",es:"La alergia",example:"Tengo alergia al maní."},
+    {en:"Dessert",es:"El postre",example:"¿Qué postres tienen hoy?"},
+    {en:"Appetizer",es:"La entrada / El aperitivo",example:"De entrada pedí una ensalada."},
+    {en:"Glass of wine",es:"Una copa de vino",example:"Quisiera una copa de vino tinto."},
+    {en:"Juice",es:"El jugo",example:"Un jugo de maracuyá, por favor."},
+    {en:"Cook / Chef",es:"El cocinero / El chef",example:"El chef estudió en París."},
+    {en:"Recipe",es:"La receta",example:"¿Me das la receta de ese plato?"},
+    {en:"Ingredient",es:"El ingrediente",example:"¿Cuáles son los ingredientes?"},
+    {en:"Tip",es:"La propina",example:"Dejé el diez por ciento de propina."},
+    {en:"Takeout / To go",es:"Para llevar",example:"¿Lo quiere aquí o para llevar?"},
+    {en:"Street food",es:"La comida callejera",example:"La comida callejera de Medellín es deliciosa."},
+    {en:"Avocado",es:"El aguacate",example:"El aguacate colombiano es cremoso."},
+  ],
+  travel: [
+    {en:"Boarding pass",es:"El pase de abordar",example:"¿Tienes tu pase de abordar?"},
+    {en:"Customs",es:"La aduana",example:"Tarda mucho pasar por aduana."},
+    {en:"Immigration",es:"Migración / Inmigración",example:"Haz fila en migración."},
+    {en:"Baggage claim",es:"Recogida de equipaje",example:"El equipaje está en la banda 4."},
+    {en:"Gate",es:"La puerta de embarque",example:"La puerta es la C12."},
+    {en:"Delayed",es:"Retrasado / Demorado",example:"El vuelo está demorado una hora."},
+    {en:"Book a room",es:"Reservar una habitación",example:"Quiero reservar una habitación doble."},
+    {en:"Check-in / Check-out",es:"Registro / Salida",example:"El check-in es a las dos de la tarde."},
+    {en:"Tourist attraction",es:"Atracción turística",example:"¿Cuál es la mejor atracción turística?"},
+    {en:"Beach",es:"La playa",example:"Vamos a la playa este fin de semana."},
+    {en:"Mountain",es:"La montaña",example:"Las montañas de Medellín son hermosas."},
+    {en:"Guide",es:"El guía turístico",example:"Contratamos un guía para el tour."},
+    {en:"Currency",es:"La moneda / La divisa",example:"¿Cuál es la moneda local aquí?"},
+    {en:"ATM",es:"El cajero automático",example:"¿Dónde hay un cajero automático?"},
+    {en:"Visa",es:"La visa",example:"Necesito visa para entrar a ese país."},
+    {en:"Transit",es:"El transbordo / El tránsito",example:"Tengo transbordo en Bogotá."},
+    {en:"Itinerary",es:"El itinerario",example:"El itinerario incluye tres ciudades."},
+    {en:"Local transport",es:"El transporte local",example:"¿Cuál es el transporte local más barato?"},
+    {en:"Museum",es:"El museo",example:"El museo del Oro en Bogotá es increíble."},
+    {en:"Souvenir",es:"El recuerdo / El souvenir",example:"Compré recuerdos para la familia."},
+  ],
+  business: [
+    {en:"Negotiation",es:"La negociación",example:"La negociación fue difícil pero exitosa."},
+    {en:"Budget",es:"El presupuesto",example:"¿Cuál es el presupuesto para este proyecto?"},
+    {en:"Proposal",es:"La propuesta",example:"Enviamos la propuesta el lunes."},
+    {en:"Presentation",es:"La presentación",example:"Hice una presentación en PowerPoint."},
+    {en:"Client",es:"El cliente",example:"El cliente quedó satisfecho."},
+    {en:"Revenue",es:"Los ingresos / Las ventas",example:"Los ingresos aumentaron este trimestre."},
+    {en:"Expense",es:"El gasto",example:"Hay que reducir los gastos."},
+    {en:"Strategy",es:"La estrategia",example:"Necesitamos una nueva estrategia de ventas."},
+    {en:"Market",es:"El mercado",example:"El mercado colombiano está creciendo."},
+    {en:"Competitor",es:"El competidor",example:"¿Quiénes son nuestros competidores?"},
+    {en:"Launch",es:"El lanzamiento",example:"El lanzamiento del producto fue exitoso."},
+    {en:"Startup",es:"La startup / La empresa emergente",example:"Fundé una startup de tecnología."},
+    {en:"Investor",es:"El inversor / El inversionista",example:"Busco un inversionista para escalar."},
+    {en:"Equity",es:"Las acciones / La participación",example:"Ofreció el 10% de las acciones."},
+    {en:"Legal",es:"Legal / Jurídico",example:"El departamento jurídico revisó el contrato."},
+    {en:"HR / Human Resources",es:"Recursos Humanos",example:"Habla con Recursos Humanos sobre eso."},
+    {en:"KPI",es:"El indicador clave / KPI",example:"¿Cuáles son los KPIs del trimestre?"},
+    {en:"Report",es:"El informe",example:"Entrega el informe antes del viernes."},
+    {en:"Supply chain",es:"La cadena de suministro",example:"La cadena de suministro tuvo problemas."},
+    {en:"E-commerce",es:"El comercio electrónico",example:"Vendemos por comercio electrónico."},
+  ],
+  sports: [
+    {en:"Football / Soccer",es:"El fútbol",example:"Colombia clasó al Mundial de fútbol."},
+    {en:"Team",es:"El equipo",example:"Mi equipo favorito es Nacional."},
+    {en:"Score",es:"El marcador / El resultado",example:"¿Cuál es el resultado?"},
+    {en:"Goal",es:"El gol",example:"¡Goool! Colombia marcó un gol."},
+    {en:"Match / Game",es:"El partido",example:"¿A qué hora es el partido?"},
+    {en:"Stadium",es:"El estadio",example:"El estadio estaba lleno."},
+    {en:"Coach",es:"El entrenador",example:"El entrenador cambió la táctica."},
+    {en:"Player",es:"El jugador",example:"Es el mejor jugador del equipo."},
+    {en:"Training",es:"El entrenamiento",example:"El entrenamiento es a las seis."},
+    {en:"Championship",es:"El campeonato",example:"Ganaron el campeonato nacional."},
+    {en:"Referee",es:"El árbitro",example:"El árbitro pitó un penalti."},
+    {en:"Bicycle",es:"La bicicleta",example:"Colombia es famosa por el ciclismo."},
+    {en:"Swimming",es:"La natación",example:"Practico natación tres veces a la semana."},
+    {en:"Tennis",es:"El tenis",example:"Jugamos tenis los domingos."},
+    {en:"Gym",es:"El gimnasio",example:"Voy al gimnasio todos los días."},
+    {en:"Race",es:"La carrera",example:"Participé en una carrera de 10 km."},
+    {en:"Medal",es:"La medalla",example:"Ganó la medalla de oro."},
+    {en:"Tournament",es:"El torneo",example:"El torneo empieza la próxima semana."},
+    {en:"Foul",es:"La falta",example:"El árbitro cobró una falta."},
+    {en:"Halftime",es:"El descanso / Medio tiempo",example:"En el medio tiempo íbamos ganando."},
+  ],
+  technology: [
+    {en:"Computer",es:"La computadora / El computador",example:"Necesito un computador nuevo."},
+    {en:"Phone",es:"El teléfono / El celular",example:"Se me olvidó el celular en casa."},
+    {en:"Internet",es:"El internet",example:"¿Hay internet en este lugar?"},
+    {en:"Password",es:"La contraseña",example:"Olvidé mi contraseña."},
+    {en:"App / Application",es:"La aplicación / La app",example:"Descargué la app del banco."},
+    {en:"Software",es:"El software / El programa",example:"Necesito actualizar el software."},
+    {en:"Hardware",es:"El hardware / El equipo",example:"El hardware de este equipo es potente."},
+    {en:"Battery",es:"La batería",example:"La batería del celular dura poco."},
+    {en:"Charger",es:"El cargador",example:"¿Tienes un cargador para iPhone?"},
+    {en:"Wi-Fi",es:"El wifi",example:"¿Cuál es la contraseña del wifi?"},
+    {en:"Screen",es:"La pantalla",example:"La pantalla del teléfono se rompió."},
+    {en:"Download",es:"La descarga / Descargar",example:"Descarga la actualización ahora."},
+    {en:"Upload",es:"Subir / Cargar",example:"Subí las fotos a la nube."},
+    {en:"Cloud",es:"La nube",example:"Guardo todo en la nube."},
+    {en:"Artificial Intelligence",es:"La inteligencia artificial",example:"La inteligencia artificial está cambiando todo."},
+    {en:"Social media",es:"Las redes sociales",example:"Tengo muchos seguidores en redes sociales."},
+    {en:"Update",es:"La actualización",example:"Tienes que instalar la actualización."},
+    {en:"Bug / Error",es:"El error / El bug",example:"Hay un error en el programa."},
+    {en:"Startup",es:"La startup",example:"Trabajo en una startup de IA."},
+    {en:"Cybersecurity",es:"La ciberseguridad",example:"La ciberseguridad es muy importante."},
+  ],
+  realestate: [
+    {en:"Property",es:"La propiedad",example:"Compré una propiedad en El Poblado."},
+    {en:"Apartment",es:"El apartamento",example:"Alquilo un apartamento en Laureles."},
+    {en:"House",es:"La casa",example:"Quiero comprar una casa con jardín."},
+    {en:"Land",es:"El terreno / El lote",example:"Compró un lote para construir."},
+    {en:"Rent",es:"El arriendo / El alquiler",example:"¿Cuánto es el arriendo mensual?"},
+    {en:"Mortgage",es:"La hipoteca",example:"Saqué una hipoteca a 20 años."},
+    {en:"Down payment",es:"La cuota inicial",example:"Debo reunir la cuota inicial."},
+    {en:"Square meter",es:"El metro cuadrado",example:"¿Cuánto vale el metro cuadrado aquí?"},
+    {en:"Floor plan",es:"El plano",example:"¿Puedo ver el plano del apartamento?"},
+    {en:"Renovation",es:"La renovación / La remodelación",example:"La remodelación costó mucho."},
+    {en:"Neighborhood",es:"El barrio",example:"El barrio de Envigado es muy tranquilo."},
+    {en:"Realtor / Agent",es:"El agente inmobiliario",example:"El agente nos mostró cinco propiedades."},
+    {en:"Lease / Contract",es:"El contrato de arrendamiento",example:"Firma el contrato de arrendamiento hoy."},
+    {en:"Deed / Title",es:"La escritura",example:"Hay que legalizar la escritura."},
+    {en:"Building",es:"El edificio",example:"Ese edificio tiene veinte pisos."},
+    {en:"Penthouse",es:"El penthouse / El ático",example:"El penthouse tiene vista a las montañas."},
+    {en:"Furnished",es:"Amoblado / Amueblado",example:"¿El apartamento está amoblado?"},
+    {en:"Utilities",es:"Los servicios públicos",example:"Los servicios están incluidos en el arriendo."},
+    {en:"Valuation",es:"El avalúo / La tasación",example:"Necesito un avalúo del inmueble."},
+    {en:"ROI / Return",es:"La rentabilidad",example:"¿Cuál es la rentabilidad esperada?"},
+  ],
+  finance: [
+    {en:"Money",es:"El dinero / La plata",example:"No tengo plata en este momento."},
+    {en:"Bank",es:"El banco",example:"Voy al banco a sacar dinero."},
+    {en:"Account",es:"La cuenta",example:"Necesito abrir una cuenta de ahorros."},
+    {en:"Transfer",es:"La transferencia",example:"Haz una transferencia bancaria."},
+    {en:"Interest rate",es:"La tasa de interés",example:"La tasa de interés está alta."},
+    {en:"Credit card",es:"La tarjeta de crédito",example:"¿Aceptan tarjeta de crédito?"},
+    {en:"Debit card",es:"La tarjeta débito",example:"Pago con tarjeta débito."},
+    {en:"Cash",es:"El efectivo",example:"¿Tienen cambio en efectivo?"},
+    {en:"Savings",es:"Los ahorros",example:"Tengo mis ahorros en el banco."},
+    {en:"Loan",es:"El préstamo",example:"Saqué un préstamo para el negocio."},
+    {en:"Tax",es:"El impuesto",example:"Hay que pagar impuestos este mes."},
+    {en:"Invoice / Bill",es:"La factura",example:"¿Me puede dar la factura?"},
+    {en:"Budget",es:"El presupuesto",example:"Vivo con un presupuesto ajustado."},
+    {en:"Investment",es:"La inversión",example:"Busco una buena inversión a largo plazo."},
+    {en:"Stock / Share",es:"La acción",example:"Compré acciones de una empresa colombiana."},
+    {en:"Crypto",es:"Las criptomonedas",example:"Invierto en criptomonedas desde hace dos años."},
+    {en:"Portfolio",es:"El portafolio",example:"Diversifiqué mi portafolio de inversiones."},
+    {en:"Exchange",es:"La bolsa de valores",example:"La bolsa de valores bajó hoy."},
+    {en:"Profit",es:"La ganancia / La utilidad",example:"Las ganancias fueron mayores de lo esperado."},
+    {en:"Loss",es:"La pérdida",example:"Tuvimos una pérdida este trimestre."},
+  ],
+  health: [
+    {en:"Doctor",es:"El médico / El doctor",example:"Tengo cita con el médico mañana."},
+    {en:"Hospital",es:"El hospital",example:"Lo llevaron al hospital de urgencia."},
+    {en:"Pharmacy",es:"La farmacia",example:"Compré el medicamento en la farmacia."},
+    {en:"Medicine",es:"El medicamento / La medicina",example:"Tome este medicamento dos veces al día."},
+    {en:"Headache",es:"El dolor de cabeza",example:"Tengo un fuerte dolor de cabeza."},
+    {en:"Fever",es:"La fiebre",example:"Tiene fiebre de 38 grados."},
+    {en:"Cough",es:"La tos",example:"No puedo dormir de la tos."},
+    {en:"Appointment",es:"La cita médica",example:"¿A qué hora es tu cita médica?"},
+    {en:"Insurance",es:"El seguro médico",example:"¿Tienes seguro médico aquí?"},
+    {en:"Emergency",es:"La urgencia / La emergencia",example:"Es una emergencia médica."},
+    {en:"Allergy",es:"La alergia",example:"Tengo alergia a la penicilina."},
+    {en:"Surgery",es:"La cirugía",example:"La cirugía fue exitosa."},
+    {en:"Blood",es:"La sangre",example:"Me tomaron un examen de sangre."},
+    {en:"X-ray",es:"La radiografía",example:"Necesita una radiografía del pecho."},
+    {en:"Prescription",es:"La receta médica",example:"El doctor me dio una receta médica."},
+    {en:"Symptom",es:"El síntoma",example:"¿Cuáles son tus síntomas?"},
+    {en:"Healthy",es:"Saludable / Sano",example:"Intenta llevar una vida saludable."},
+    {en:"Diet",es:"La dieta",example:"Estoy siguiendo una dieta especial."},
+    {en:"Exercise",es:"El ejercicio",example:"Hago ejercicio tres veces a la semana."},
+    {en:"Dentist",es:"El dentista",example:"Voy al dentista cada seis meses."},
+  ],
+  education: [
+    {en:"School",es:"La escuela / El colegio",example:"Mis hijos van al colegio."},
+    {en:"University",es:"La universidad",example:"Estudié en la Universidad de los Andes."},
+    {en:"Degree",es:"El título / El grado",example:"Tengo un título en Economía."},
+    {en:"Professor",es:"El profesor / El catedrático",example:"El profesor es muy exigente."},
+    {en:"Student",es:"El estudiante / El alumno",example:"Soy estudiante de intercambio."},
+    {en:"Class",es:"La clase",example:"La clase de español es a las 10."},
+    {en:"Homework",es:"La tarea",example:"¿Ya hiciste la tarea?"},
+    {en:"Exam / Test",es:"El examen / La prueba",example:"Tengo examen el viernes."},
+    {en:"Grade",es:"La nota / La calificación",example:"Saqué buena nota en el examen."},
+    {en:"Library",es:"La biblioteca",example:"Voy a estudiar en la biblioteca."},
+    {en:"Scholarship",es:"La beca",example:"Gané una beca para estudiar en el exterior."},
+    {en:"Internship",es:"La pasantía / Las prácticas",example:"Hice mis prácticas en una empresa."},
+    {en:"Research",es:"La investigación",example:"Publiqué una investigación científica."},
+    {en:"Course",es:"El curso",example:"Me inscribí en un curso de español."},
+    {en:"Notebook",es:"El cuaderno",example:"Tomé apuntes en mi cuaderno."},
+    {en:"Pen / Pencil",es:"El bolígrafo / El lápiz",example:"¿Tienes un bolígrafo?"},
+    {en:"Campus",es:"El campus",example:"El campus de la universidad es enorme."},
+    {en:"Tutor",es:"El tutor",example:"Busco un tutor para practicar español."},
+    {en:"Language",es:"El idioma / La lengua",example:"Habla cuatro idiomas."},
+    {en:"Bilingual",es:"Bilingüe",example:"El colegio es bilingüe en inglés y español."},
+  ],
+
+  animals: [
+    {en:"Dog",es:"El perro",example:"El perro está en el parque."},
+    {en:"Cat",es:"El gato",example:"El gato duerme en el sofá."},
+    {en:"Bird",es:"El pájaro",example:"Hay un pájaro cantando afuera."},
+    {en:"Horse",es:"El caballo",example:"El caballo corre muy rápido."},
+    {en:"Cow",es:"La vaca",example:"La vaca está en el campo."},
+    {en:"Pig",es:"El cerdo",example:"El cerdo es un animal inteligente."},
+    {en:"Chicken",es:"El pollo / La gallina",example:"La gallina pone huevos."},
+    {en:"Fish",es:"El pez / El pescado",example:"Hay muchos peces en el río."},
+    {en:"Lion",es:"El león",example:"El león es el rey de la selva."},
+    {en:"Tiger",es:"El tigre",example:"El tigre es un animal feroz."},
+    {en:"Elephant",es:"El elefante",example:"El elefante tiene una memoria increíble."},
+    {en:"Monkey",es:"El mono",example:"Los monos viven en la selva colombiana."},
+    {en:"Snake",es:"La serpiente",example:"Esa serpiente es venenosa."},
+    {en:"Frog",es:"La rana",example:"La rana salta al agua."},
+    {en:"Butterfly",es:"La mariposa",example:"Colombia tiene miles de especies de mariposas."},
+    {en:"Bee",es:"La abeja",example:"La abeja produce miel."},
+    {en:"Spider",es:"La araña",example:"Hay una araña en la pared."},
+    {en:"Parrot",es:"El loro",example:"El loro repite todo lo que digo."},
+    {en:"Bear",es:"El oso",example:"El oso de anteojos vive en los Andes."},
+    {en:"Jaguar",es:"El jaguar",example:"El jaguar es el felino más grande de América."},
+  ],
+
+  colors: [
+    {en:"Red",es:"Rojo",example:"El semáforo está en rojo."},
+    {en:"Blue",es:"Azul",example:"El cielo está muy azul hoy."},
+    {en:"Green",es:"Verde",example:"Me gustan los ojos verdes."},
+    {en:"Yellow",es:"Amarillo",example:"El taxi es amarillo en Bogotá."},
+    {en:"Orange",es:"Naranja",example:"Lleva una camisa naranja."},
+    {en:"Purple",es:"Morado / Violeta",example:"Las flores moradas son hermosas."},
+    {en:"Pink",es:"Rosado / Rosa",example:"Le regaló rosas rosadas."},
+    {en:"Black",es:"Negro",example:"Viste siempre de negro."},
+    {en:"White",es:"Blanco",example:"Las paredes son blancas."},
+    {en:"Grey",es:"Gris",example:"El cielo gris anuncia lluvia."},
+    {en:"Brown",es:"Marrón / Café",example:"Tiene ojos color café."},
+    {en:"Light blue",es:"Celeste / Azul claro",example:"El mar Caribe es azul celeste."},
+    {en:"Dark green",es:"Verde oscuro",example:"Lleva una chaqueta verde oscuro."},
+    {en:"Gold",es:"Dorado",example:"El anillo es dorado."},
+    {en:"Silver",es:"Plateado",example:"Las medallas de plata son plateadas."},
+    {en:"Turquoise",es:"Turquesa",example:"Las aguas son de color turquesa."},
+    {en:"Beige",es:"Beige / Crema",example:"Las paredes son de color crema."},
+    {en:"Dark",es:"Oscuro",example:"Prefiero los colores oscuros."},
+    {en:"Light",es:"Claro",example:"Me gusta la ropa de colores claros."},
+    {en:"Colourful",es:"Colorido",example:"El mercado es muy colorido."},
+  ],
+
+  numbers: [
+    {en:"One",es:"Uno",example:"Solo quiero uno, gracias."},
+    {en:"Two",es:"Dos",example:"Tengo dos hermanos."},
+    {en:"Three",es:"Tres",example:"Dame tres minutos, por favor."},
+    {en:"Four",es:"Cuatro",example:"Hay cuatro personas en la mesa."},
+    {en:"Five",es:"Cinco",example:"Llegaré en cinco minutos."},
+    {en:"Ten",es:"Diez",example:"Le doy un diez de calificación."},
+    {en:"Twenty",es:"Veinte",example:"Cuesta veinte mil pesos."},
+    {en:"Fifty",es:"Cincuenta",example:"Hay cincuenta personas en la fila."},
+    {en:"One hundred",es:"Cien / Ciento",example:"Cuesta cien pesos."},
+    {en:"One thousand",es:"Mil",example:"Son cinco mil pesos."},
+    {en:"One million",es:"Un millón",example:"Ganó un millón de pesos."},
+    {en:"First",es:"Primero",example:"Llegó primero en la carrera."},
+    {en:"Second",es:"Segundo",example:"Soy el segundo en la lista."},
+    {en:"Third",es:"Tercero",example:"Vive en el tercer piso."},
+    {en:"Half",es:"La mitad / Medio",example:"Dame la mitad del pastel."},
+    {en:"Double",es:"El doble",example:"Quiero el doble de arroz."},
+    {en:"Zero",es:"Cero",example:"La temperatura es cero grados."},
+    {en:"Dozen",es:"Una docena",example:"Compré una docena de huevos."},
+    {en:"Pair / Couple",es:"Un par / Una pareja",example:"Necesito un par de zapatos."},
+    {en:"Both",es:"Ambos / Los dos",example:"Ambos llegaron tarde."},
+  ],
+
+  family: [
+    {en:"Mother",es:"La madre / La mamá",example:"Mi mamá cocina muy bien."},
+    {en:"Father",es:"El padre / El papá",example:"Mi papá trabaja en Bogotá."},
+    {en:"Brother",es:"El hermano",example:"Mi hermano mayor vive en Medellín."},
+    {en:"Sister",es:"La hermana",example:"Mi hermana estudia medicina."},
+    {en:"Son",es:"El hijo",example:"Mi hijo tiene cinco años."},
+    {en:"Daughter",es:"La hija",example:"Mi hija empieza el colegio."},
+    {en:"Grandfather",es:"El abuelo",example:"Mi abuelo tiene ochenta años."},
+    {en:"Grandmother",es:"La abuela",example:"La abuela hace tamales los domingos."},
+    {en:"Uncle",es:"El tío",example:"Mi tío vive en Cali."},
+    {en:"Aunt",es:"La tía",example:"Mi tía me enseñó a cocinar."},
+    {en:"Cousin",es:"El primo / La prima",example:"Mi primo viene a visitarme."},
+    {en:"Husband",es:"El esposo / El marido",example:"Mi esposo trabaja desde casa."},
+    {en:"Wife",es:"La esposa / La mujer",example:"Mi esposa es médica."},
+    {en:"Partner",es:"La pareja",example:"Mi pareja es colombiana."},
+    {en:"Nephew",es:"El sobrino",example:"Mi sobrino nació en enero."},
+    {en:"Niece",es:"La sobrina",example:"Mi sobrina es muy lista."},
+    {en:"In-law",es:"El suegro / La suegra",example:"Mis suegros viven en Cartagena."},
+    {en:"Sibling",es:"El hermano / La hermana",example:"Tengo dos hermanos."},
+    {en:"Twins",es:"Los gemelos / Los mellizos",example:"Sus hijos son gemelos."},
+    {en:"Godfather / Godmother",es:"El padrino / La madrina",example:"Mi padrino me regaló un libro."},
+  ],
+
+  weather: [
+    {en:"Sun / Sunny",es:"El sol / Soleado",example:"Hace mucho sol hoy en Cartagena."},
+    {en:"Rain / Rainy",es:"La lluvia / Lluvioso",example:"Está lloviendo mucho en Bogotá."},
+    {en:"Cloud / Cloudy",es:"La nube / Nublado",example:"El cielo está muy nublado."},
+    {en:"Wind / Windy",es:"El viento / Ventoso",example:"Hace mucho viento en la costa."},
+    {en:"Storm",es:"La tormenta",example:"Viene una tormenta esta tarde."},
+    {en:"Thunder",es:"El trueno",example:"Los truenos me asustaron."},
+    {en:"Lightning",es:"El rayo / El relámpago",example:"Vi un rayo en la tormenta."},
+    {en:"Hot",es:"Caliente / Caluroso",example:"Hace mucho calor en Barranquilla."},
+    {en:"Cold",es:"Frío",example:"Hace frío en las montañas."},
+    {en:"Temperature",es:"La temperatura",example:"¿Cuál es la temperatura hoy?"},
+    {en:"Humidity",es:"La humedad",example:"La humedad en Cartagena es alta."},
+    {en:"Fog",es:"La niebla / El neblina",example:"Hay mucha neblina en la mañana."},
+    {en:"Forecast",es:"El pronóstico del tiempo",example:"El pronóstico dice que va a llover."},
+    {en:"Season",es:"La temporada / La estación",example:"Estamos en temporada de lluvias."},
+    {en:"Dry season",es:"La temporada seca / El verano",example:"En el verano no llueve tanto."},
+    {en:"Raincoat",es:"El impermeable / El chubasquero",example:"Lleva siempre un impermeable en Bogotá."},
+    {en:"Umbrella",es:"El paraguas / La sombrilla",example:"Se me olvidó el paraguas."},
+    {en:"Rainbow",es:"El arcoíris",example:"¡Mira ese arcoíris tan bonito!"},
+    {en:"Breeze",es:"La brisa",example:"Hay una brisa agradable en la playa."},
+    {en:"Hail",es:"El granizo",example:"Cayó granizo en Bogotá ayer."},
+  ],
+
+  clothing: [
+    {en:"Shirt",es:"La camisa",example:"¿Qué camisa me pongo?"},
+    {en:"T-shirt",es:"La camiseta",example:"Lleva una camiseta blanca."},
+    {en:"Trousers / Pants",es:"Los pantalones",example:"Compré unos pantalones nuevos."},
+    {en:"Dress",es:"El vestido",example:"Llevó un vestido rojo a la fiesta."},
+    {en:"Skirt",es:"La falda",example:"La falda le quedó perfecta."},
+    {en:"Jacket / Coat",es:"La chaqueta / El abrigo",example:"Trae una chaqueta, que hace frío."},
+    {en:"Shoes",es:"Los zapatos",example:"Esos zapatos son muy cómodos."},
+    {en:"Boots",es:"Las botas",example:"Las botas son perfectas para el barro."},
+    {en:"Sandals",es:"Las sandalias",example:"Usa sandalias en la playa."},
+    {en:"Socks",es:"Los calcetines / Las medias",example:"Se me perdió una media."},
+    {en:"Underwear",es:"La ropa interior",example:"Compré ropa interior nueva."},
+    {en:"Hat",es:"El sombrero / La gorra",example:"El sombrero vueltiao es colombiano."},
+    {en:"Scarf",es:"La bufanda",example:"La bufanda es de lana."},
+    {en:"Gloves",es:"Los guantes",example:"Necesito guantes para el frío."},
+    {en:"Belt",es:"El cinturón",example:"Se le rompió el cinturón."},
+    {en:"Suit",es:"El traje / El vestido de hombre",example:"Lleva traje a las reuniones."},
+    {en:"Pyjamas",es:"El pijama",example:"Ya me puse el pijama."},
+    {en:"Swimsuit",es:"El vestido de baño / El traje de baño",example:"No olvides el vestido de baño."},
+    {en:"Size",es:"La talla / El talle",example:"¿Qué talla usas?"},
+    {en:"Try on",es:"Probarse",example:"¿Me puedo probar esta camisa?"},
+  ],
+
+  body: [
+    {en:"Head",es:"La cabeza",example:"Me duele la cabeza."},
+    {en:"Face",es:"La cara",example:"Tiene una cara muy simpática."},
+    {en:"Eye",es:"El ojo",example:"Tiene los ojos verdes."},
+    {en:"Ear",es:"La oreja / El oído",example:"Me duele el oído izquierdo."},
+    {en:"Nose",es:"La nariz",example:"Me sangra la nariz."},
+    {en:"Mouth",es:"La boca",example:"Habla con la boca llena."},
+    {en:"Teeth",es:"Los dientes",example:"Tienes que cepillarte los dientes."},
+    {en:"Tongue",es:"La lengua",example:"Se mordió la lengua."},
+    {en:"Neck",es:"El cuello",example:"Me duele el cuello."},
+    {en:"Shoulder",es:"El hombro",example:"Se lesionó el hombro."},
+    {en:"Arm",es:"El brazo",example:"Tiene el brazo en yeso."},
+    {en:"Hand",es:"La mano",example:"Dame la mano."},
+    {en:"Finger",es:"El dedo",example:"Se cortó el dedo."},
+    {en:"Chest",es:"El pecho",example:"Me duele el pecho."},
+    {en:"Stomach / Belly",es:"El estómago / La barriga",example:"Me duele el estómago."},
+    {en:"Back",es:"La espalda",example:"Tengo dolor de espalda."},
+    {en:"Leg",es:"La pierna",example:"Se rompió la pierna."},
+    {en:"Knee",es:"La rodilla",example:"Me duele la rodilla."},
+    {en:"Foot",es:"El pie",example:"Me pisaron el pie en el metro."},
+    {en:"Hair",es:"El pelo / El cabello",example:"Tiene el cabello largo."},
+  ],
+
+  home: [
+    {en:"Living room",es:"La sala / El salón",example:"Estamos en la sala viendo TV."},
+    {en:"Bedroom",es:"La habitación / El cuarto",example:"Mi cuarto da al jardín."},
+    {en:"Kitchen",es:"La cocina",example:"La cocina huele a arepas."},
+    {en:"Bathroom",es:"El baño",example:"¿Dónde está el baño?"},
+    {en:"Dining room",es:"El comedor",example:"Almorzamos en el comedor."},
+    {en:"Garden / Yard",es:"El jardín / El patio",example:"El patio tiene flores hermosas."},
+    {en:"Door",es:"La puerta",example:"Por favor cierra la puerta."},
+    {en:"Window",es:"La ventana",example:"Abre la ventana, hace calor."},
+    {en:"Stairs",es:"Las escaleras",example:"El apartamento no tiene escaleras."},
+    {en:"Roof",es:"El techo",example:"El techo tiene una gotera."},
+    {en:"Floor",es:"El piso / El suelo",example:"El piso es de madera."},
+    {en:"Wall",es:"La pared",example:"Pintamos las paredes de blanco."},
+    {en:"Bed",es:"La cama",example:"La cama es muy cómoda."},
+    {en:"Sofa / Couch",es:"El sofá / El canapé",example:"Me dormí en el sofá."},
+    {en:"Table",es:"La mesa",example:"Pon los platos en la mesa."},
+    {en:"Chair",es:"La silla",example:"Siéntate en esta silla."},
+    {en:"Fridge",es:"El refrigerador / La nevera",example:"La nevera está vacía."},
+    {en:"Washing machine",es:"La lavadora",example:"Pon la ropa en la lavadora."},
+    {en:"Neighbour",es:"El vecino / La vecina",example:"Mi vecina es muy amable."},
+    {en:"Rent",es:"El arriendo / El alquiler",example:"¿Cuánto es el arriendo mensual?"},
+  ],
+
+  nature: [
+    {en:"Tree",es:"El árbol",example:"Hay un árbol enorme en el parque."},
+    {en:"Flower",es:"La flor",example:"Las flores de Colombia son hermosas."},
+    {en:"River",es:"El río",example:"El río Magdalena es el más largo de Colombia."},
+    {en:"Lake",es:"El lago",example:"El lago está muy tranquilo hoy."},
+    {en:"Sea / Ocean",es:"El mar / El océano",example:"El mar Caribe es increíble."},
+    {en:"Jungle / Forest",es:"La selva / El bosque",example:"La selva amazónica es enorme."},
+    {en:"Desert",es:"El desierto",example:"La Guajira tiene desierto."},
+    {en:"Volcano",es:"El volcán",example:"El volcán Nevado del Ruíz es activo."},
+    {en:"Waterfall",es:"La cascada / La catarata",example:"Las cascadas de Caño Cristales son famosas."},
+    {en:"Island",es:"La isla",example:"San Andrés es una isla colombiana."},
+    {en:"Valley",es:"El valle",example:"El Valle del Cauca es fértil."},
+    {en:"Hill / Cliff",es:"La colina / El cerro",example:"El Cerro de Monserrate está en Bogotá."},
+    {en:"Rock / Stone",es:"La roca / La piedra",example:"Se tropezó con una piedra."},
+    {en:"Sand",es:"La arena",example:"La arena de la playa es blanca."},
+    {en:"Sky",es:"El cielo",example:"El cielo está lleno de estrellas."},
+    {en:"Star",es:"La estrella",example:"Desde el campo se ven muchas estrellas."},
+    {en:"Moon",es:"La luna",example:"La luna llena está preciosa."},
+    {en:"Sun",es:"El sol",example:"El sol sale a las seis."},
+    {en:"Grass",es:"La hierba / El pasto",example:"El pasto está muy verde."},
+    {en:"Leaf",es:"La hoja",example:"Las hojas caen en otoño."},
+  ],
+
+  emotions: [
+    {en:"Happy",es:"Feliz / Contento",example:"Estoy muy contento hoy."},
+    {en:"Sad",es:"Triste",example:"Se puso triste con la noticia."},
+    {en:"Angry",es:"Enojado / Bravo",example:"Está muy bravo conmigo."},
+    {en:"Scared / Afraid",es:"Asustado / Con miedo",example:"Le tengo miedo a las arañas."},
+    {en:"Surprised",es:"Sorprendido",example:"Quedé sorprendido con la noticia."},
+    {en:"Excited",es:"Emocionado",example:"Estoy muy emocionado por el viaje."},
+    {en:"Nervous",es:"Nervioso",example:"Estoy nervioso antes del examen."},
+    {en:"Tired",es:"Cansado",example:"Estoy muy cansado hoy."},
+    {en:"Bored",es:"Aburrido",example:"Me siento aburrido en casa."},
+    {en:"Relaxed",es:"Relajado / Tranquilo",example:"Me siento muy relajado."},
+    {en:"Stressed",es:"Estresado",example:"Estoy estresado con el trabajo."},
+    {en:"Embarrassed",es:"Avergonzado",example:"Quedé avergonzado frente a todos."},
+    {en:"Proud",es:"Orgulloso",example:"Estoy orgulloso de ti."},
+    {en:"Lonely",es:"Solo / Solitario",example:"Me siento solo en esta ciudad."},
+    {en:"Confused",es:"Confundido",example:"Estoy confundido con las instrucciones."},
+    {en:"Grateful",es:"Agradecido",example:"Estoy agradecido por todo."},
+    {en:"Jealous",es:"Celoso / Envidioso",example:"No seas tan celoso."},
+    {en:"In love",es:"Enamorado",example:"Está muy enamorado."},
+    {en:"Homesick",es:"Con nostalgia / Extrañando",example:"Extraño mucho mi casa."},
+    {en:"Frustrated",es:"Frustrado",example:"Me siento frustrado con el proceso."},
+  ],
+
+  time: [
+    {en:"Today",es:"Hoy",example:"¿Qué tienes planeado para hoy?"},
+    {en:"Yesterday",es:"Ayer",example:"Ayer fui al mercado."},
+    {en:"Tomorrow",es:"Mañana",example:"Mañana tengo una reunión."},
+    {en:"Monday",es:"El lunes",example:"La reunión es el lunes."},
+    {en:"Tuesday",es:"El martes",example:"El martes tengo clase."},
+    {en:"Wednesday",es:"El miércoles",example:"El miércoles vamos al cine."},
+    {en:"Thursday",es:"El jueves",example:"El jueves es festivo."},
+    {en:"Friday",es:"El viernes",example:"Los viernes salimos a comer."},
+    {en:"Saturday",es:"El sábado",example:"El sábado vamos a la finca."},
+    {en:"Sunday",es:"El domingo",example:"El domingo descansamos."},
+    {en:"Morning",es:"La mañana",example:"Me gusta caminar en la mañana."},
+    {en:"Afternoon",es:"La tarde",example:"Nos vemos en la tarde."},
+    {en:"Evening / Night",es:"La noche",example:"Salimos en la noche."},
+    {en:"Week",es:"La semana",example:"La semana que viene viajo."},
+    {en:"Month",es:"El mes",example:"Este mes es muy ocupado."},
+    {en:"Year",es:"El año",example:"El año pasado viajé a Cartagena."},
+    {en:"Hour",es:"La hora",example:"¿Qué hora es?"},
+    {en:"Minute",es:"El minuto",example:"Espera un minuto."},
+    {en:"Early",es:"Temprano",example:"Llegué muy temprano."},
+    {en:"Late",es:"Tarde",example:"Perdón, llegué tarde."},
+  ],
+
+  verbs: [
+    {en:"To be (permanent)",es:"Ser",example:"Soy de Australia."},
+    {en:"To be (temporary)",es:"Estar",example:"Estoy en Medellín."},
+    {en:"To have",es:"Tener",example:"Tengo hambre."},
+    {en:"To go",es:"Ir",example:"Voy al mercado."},
+    {en:"To come",es:"Venir",example:"¿Vienes a la fiesta?"},
+    {en:"To want",es:"Querer",example:"Quiero aprender español."},
+    {en:"To need",es:"Necesitar",example:"Necesito ayuda."},
+    {en:"To like",es:"Gustar",example:"Me gusta el café colombiano."},
+    {en:"To eat",es:"Comer",example:"¿Dónde quieres comer?"},
+    {en:"To drink",es:"Beber / Tomar",example:"¿Qué quieres tomar?"},
+    {en:"To speak / To talk",es:"Hablar",example:"Hablo español un poco."},
+    {en:"To understand",es:"Entender",example:"No entiendo esta palabra."},
+    {en:"To know (a fact)",es:"Saber",example:"No sé cómo se dice."},
+    {en:"To know (a person)",es:"Conocer",example:"¿Conoces Cartagena?"},
+    {en:"To work",es:"Trabajar",example:"Trabajo desde casa."},
+    {en:"To live",es:"Vivir",example:"Vivo en Medellín."},
+    {en:"To think",es:"Pensar / Creer",example:"Creo que tienes razón."},
+    {en:"To buy",es:"Comprar",example:"Voy a comprar frutas."},
+    {en:"To give",es:"Dar",example:"¿Me das tu número?"},
+    {en:"To take / To catch",es:"Tomar / Coger",example:"Toma el bus en la esquina."},
+  ],
+
+  greetings: [
+    {en:"Hello / Hi",es:"Hola",example:"¡Hola! ¿Cómo estás?"},
+    {en:"Good morning",es:"Buenos días",example:"Buenos días, ¿cómo amaneciste?"},
+    {en:"Good afternoon",es:"Buenas tardes",example:"Buenas tardes, señora."},
+    {en:"Good evening / Night",es:"Buenas noches",example:"Buenas noches, que descanses."},
+    {en:"Goodbye",es:"Adiós / Chao",example:"Chao, nos vemos mañana."},
+    {en:"See you later",es:"Hasta luego / Nos vemos",example:"Nos vemos más tarde."},
+    {en:"Please",es:"Por favor",example:"¿Me puedes ayudar, por favor?"},
+    {en:"Thank you",es:"Gracias",example:"Muchas gracias por todo."},
+    {en:"You're welcome",es:"De nada / Con mucho gusto",example:"Con mucho gusto, para servirte."},
+    {en:"Sorry / Excuse me",es:"Perdón / Disculpe",example:"Disculpe, ¿dónde está el baño?"},
+    {en:"No problem",es:"No hay problema / Sin problema",example:"No hay problema, tranquilo."},
+    {en:"How are you?",es:"¿Cómo estás? / ¿Qué más?",example:"¡Quiubo! ¿Qué más, parce?"},
+    {en:"I'm fine",es:"Estoy bien / Todo bien",example:"Todo bien, gracias a Dios."},
+    {en:"What's your name?",es:"¿Cómo te llamas?",example:"¿Cómo te llamas? Me llamo Kelly."},
+    {en:"Nice to meet you",es:"Mucho gusto / Un placer",example:"Mucho gusto en conocerte."},
+    {en:"Do you speak English?",es:"¿Hablas inglés?",example:"¿Hablas inglés? Solo un poco."},
+    {en:"I don't understand",es:"No entiendo",example:"No entiendo, ¿puedes repetir?"},
+    {en:"Can you speak slower?",es:"¿Puedes hablar más despacio?",example:"Por favor habla más despacio."},
+    {en:"Where are you from?",es:"¿De dónde eres?",example:"¿De dónde eres? Soy de Australia."},
+    {en:"Cheers!",es:"¡Salud!",example:"¡Salud! Por los nuevos amigos."},
+  ],
+};
+
+/**
+ * generateCardsForTopic
+ * Matches a topic name against the vocab banks and returns 20 cards.
+ * Falls back to a general Spanish vocab set for unknown topics.
+ * Filters out cards already present to avoid duplicates.
+ * 
+ * @param {string} topicName - The topic name entered by the user
+ * @param {Array}  existing  - Cards already in the topic
+ * @returns {Array} Array of up to 20 new card objects
+ */
+function generateCardsForTopic(topicName, existing = []) {
+  const key   = topicName.toLowerCase().replace(/\s+/g, "");
+  const existSet = new Set(existing.map(c => c.en.toLowerCase()));
+
+  // Match against known banks using keyword detection
+  let bank = null;
+  if (/film|movie|cinema|cine|pelicula|películas?/i.test(topicName))    bank = VOCAB_BANKS.films;
+  else if (/food|comida|eat|restaurant|cocina|cook/i.test(topicName))   bank = VOCAB_BANKS.food;
+  else if (/travel|viaj|trip|tour|airport|vuelo/i.test(topicName))      bank = VOCAB_BANKS.travel;
+  else if (/business|negocio|work|empresa|office/i.test(topicName))     bank = VOCAB_BANKS.business;
+  else if (/sport|futbol|fútbol|soccer|gym|fitness/i.test(topicName))   bank = VOCAB_BANKS.sports;
+  else if (/tech|tecnolog|digital|computer|software|app|AI/i.test(topicName)) bank = VOCAB_BANKS.technology;
+  else if (/real.?estate|inmobili|propert|house|apartment/i.test(topicName)) bank = VOCAB_BANKS.realestate;
+  else if (/financ|money|bank|invest|dinero|crypto|forex/i.test(topicName)) bank = VOCAB_BANKS.finance;
+  else if (/health|salud|medic|doctor|hospital|fitness/i.test(topicName)) bank = VOCAB_BANKS.health;
+  else if (/educat|school|university|learn|study|class/i.test(topicName)) bank = VOCAB_BANKS.education;
+  else if (/animal|pet|mascotas?|zoo|fauna|bird|dog|cat|horse/i.test(topicName))  bank = VOCAB_BANKS.animals;
+  else if (/colou?r|color|colour|rojo|azul|verde|amarillo/i.test(topicName))       bank = VOCAB_BANKS.colors;
+  else if (/number|numero|n\u00famero|contar|count|digit/i.test(topicName))        bank = VOCAB_BANKS.numbers;
+  else if (/famil|parent|mother|father|sibling|hermano|madre|padre/i.test(topicName)) bank = VOCAB_BANKS.family;
+  else if (/weather|clima|tiempo|lluvia|rain|sun|wind|temperatura/i.test(topicName)) bank = VOCAB_BANKS.weather;
+  else if (/cloth|ropa|fashion|moda|shirt|shoe|dress|vestir/i.test(topicName))    bank = VOCAB_BANKS.clothing;
+  else if (/body|cuerpo|anatomy|organ|cabeza|hand|mano|pie|face/i.test(topicName)) bank = VOCAB_BANKS.body;
+  else if (/home|casa|house|room|furniture|mueble|cuarto|bedroom/i.test(topicName)) bank = VOCAB_BANKS.home;
+  else if (/nature|naturaleza|forest|bosque|mountain|monta\u00f1a|river|ocean/i.test(topicName)) bank = VOCAB_BANKS.nature;
+  else if (/emotion|feeling|sentimiento|happy|feliz|sad|triste|angry/i.test(topicName)) bank = VOCAB_BANKS.emotions;
+  else if (/time|tiempo|clock|hour|hora|minute|day|d\u00eda|week|semana/i.test(topicName)) bank = VOCAB_BANKS.time;
+  else if (/verb|action|accion|acci\u00f3n|conjugat/i.test(topicName))              bank = VOCAB_BANKS.verbs;
+  else if (/greet|saludar|hola|saludo|hello|bye/i.test(topicName))                 bank = VOCAB_BANKS.greetings;
+
+  // If no bank matched, combine all banks and pick relevant words
+  if (!bank) {
+    // Use a broad mix as fallback from ALL banks
+    bank = [
+      ...VOCAB_BANKS.films.slice(0,2),
+      ...VOCAB_BANKS.food.slice(0,2),
+      ...VOCAB_BANKS.travel.slice(0,2),
+      ...VOCAB_BANKS.business.slice(0,2),
+      ...VOCAB_BANKS.technology.slice(0,2),
+      ...VOCAB_BANKS.animals.slice(0,2),
+      ...VOCAB_BANKS.colors.slice(0,2),
+      ...VOCAB_BANKS.numbers.slice(0,2),
+      ...VOCAB_BANKS.family.slice(0,2),
+      ...VOCAB_BANKS.weather.slice(0,2),
+      ...VOCAB_BANKS.body.slice(0,2),
+      ...VOCAB_BANKS.home.slice(0,2),
+      ...VOCAB_BANKS.nature.slice(0,2),
+      ...VOCAB_BANKS.emotions.slice(0,2),
+      ...VOCAB_BANKS.verbs.slice(0,2),
+    ];
+  }
+
+  // Filter duplicates and pick 20
+  const filtered = bank.filter(c => !existSet.has(c.en.toLowerCase()));
+  // Shuffle for variety
+  for (let i = filtered.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [filtered[i], filtered[j]] = [filtered[j], filtered[i]];
+  }
+  return filtered.slice(0, 20);
+}
+
+/* ============================================================
+   TRANSLATION
+   Primary:  Google Translate unofficial endpoint (reliable, no key)
+   Fallback: MyMemory API
+   Both results are sanitised — HTML tags stripped, error strings rejected.
+============================================================ */
+function stripHtml(str) {
+  return str.replace(/<[^>]*>/g, "").trim();
+}
+function isValidTranslation(str) {
+  if (!str || !str.trim()) return false;
+  // Reject known error strings from MyMemory / Google
+  const bad = ["QUERY LENGTH", "MYMEMORY WARNING", "quota", "PLEASE SELECT", "error", "undefined"];
+  const low = str.toLowerCase();
+  if (bad.some(b => low.includes(b.toLowerCase()))) return false;
+  // Reject if it still contains HTML tags after strip attempt
+  if (/<[a-z][\s\S]*>/i.test(str)) return false;
+  return true;
+}
+
+async function translateViaMymemory(text) {
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=es|en`;
+  const res  = await fetch(url, { signal: AbortSignal.timeout(6000) });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  const raw  = data.responseData?.translatedText || "";
+  const clean = stripHtml(raw);
+  return isValidTranslation(clean) ? clean : null;
+}
+
+async function translateViaGoogle(text) {
+  // Unofficial Google Translate endpoint — no key required
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=en&dt=t&q=${encodeURIComponent(text)}`;
+  const res  = await fetch(url, { signal: AbortSignal.timeout(6000) });
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  // Response: [ [ ["translated", "original", ...], ... ], ... ]
+  const raw = data?.[0]?.map(chunk => chunk?.[0] || "").join("").trim();
+  const clean = stripHtml(raw);
+  return isValidTranslation(clean) ? clean : null;
+}
+
+async function translateToEnglish(text) {
+  // Try Google first (more reliable), fall back to MyMemory
+  try {
+    const result = await translateViaGoogle(text);
+    if (result) return result;
+  } catch { /* fall through */ }
+  try {
+    const result = await translateViaMymemory(text);
+    if (result) return result;
+  } catch { /* fall through */ }
+  return null;
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+function renderTopicSelects() {
+  const topics  = Object.keys(cardData).sort();
+  const mainSel   = document.getElementById("topicSelect");
+  const addSel    = document.getElementById("cardTopicSelect");
+  const importSel = document.getElementById("importTopicSelect");
+  [mainSel, addSel, importSel].forEach(sel => {
+    sel.innerHTML = "";
+    topics.forEach(t => {
+      const opt = document.createElement("option");
+      opt.value = t;
+      // Display English label, not the internal key
+      opt.textContent = `${topicLabel(t)} (${cardData[t].length})`;
+      if (t === currentTopic) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function resetOrder() {
+  const cards = cardData[currentTopic] || [];
+  cardOrder   = cards.map((_, i) => i);
+  cardIndex   = 0;
+  isFlipped   = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+}
+
+function setAILoading(show, text = "Generating flashcards…", sub = "Creating 20 cards for this topic") {
+  document.getElementById("aiLoading").classList.toggle("visible", show);
+  document.getElementById("cardScene").style.display = show ? "none" : "";
+  document.getElementById("aiLoadingText").textContent = text;
+  document.getElementById("aiLoadingSub").textContent  = sub;
+}
+
+function renderCard() {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) {
+    document.getElementById("frontBadge").textContent = currentTopic ? topicLabel(currentTopic) : "—";
+    document.getElementById("frontWord").textContent  = "No cards yet";
+    document.getElementById("frontSub").textContent   = "Use Auto Add or Manual Add below";
+    document.getElementById("backWord").textContent   = "";
+    document.getElementById("exampleText").textContent = "";
+    document.getElementById("progressFill").style.width = "0%";
+    document.getElementById("cardCount").textContent = "0 / 0";
+    return;
+  }
+
+  const card  = cards[cardOrder[cardIndex]];
+  const front = displayMode === "en" ? card.en : card.es;
+  const back  = displayMode === "en" ? card.es : card.en;
+  const frontSub = displayMode === "es" ? "" : "";
+
+  document.getElementById("frontBadge").textContent  = topicLabel(currentTopic);
+  document.getElementById("backBadge").textContent   = topicLabel(currentTopic);
+  document.getElementById("frontWord").textContent   = front;
+  document.getElementById("frontSub").textContent    = frontSub;
+  document.getElementById("backWord").textContent    = back;
+  // Dialect label REMOVED per spec — no backDialect element needed
+
+  // Example sentence
+  document.getElementById("exampleText").textContent  = card.example || "";
+  document.getElementById("exampleSentence").classList.remove("visible");
+  document.getElementById("exampleTranslation").classList.remove("visible");
+  document.getElementById("exampleTranslation").textContent = "";
+  document.getElementById("tapHint").style.display = card.example ? "" : "none";
+
+  // Sentence button: show only on the Spanish face
+  // en mode → Spanish is on the BACK face
+  // es mode → Spanish is on the FRONT face
+  const hasSentence = !!card.example;
+  document.getElementById("sentenceBackBtn").style.display  = (displayMode === "en" && hasSentence) ? "" : "none";
+  document.getElementById("sentenceBackBtn").textContent    = "Sentence";
+  document.getElementById("sentenceFrontBtn").style.display = (displayMode === "es" && hasSentence) ? "" : "none";
+  document.getElementById("sentenceFrontBtn").textContent   = "Sentence";
+
+  // Progress
+  const pct = cards.length > 1 ? ((cardIndex + 1) / cards.length) * 100 : 100;
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("cardCount").textContent    = `${cardIndex + 1} / ${cards.length}`;
+
+  if (!isFlipped) document.getElementById("flashcard").classList.remove("flipped");
+}
+
+function showToast(msg, duration = 2200) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove("show"), duration);
+}
+
+/* ============================================================
+   EVENT HANDLERS
+============================================================ */
+
+// Card flip
+document.getElementById("flashcard").addEventListener("click", () => {
+  isFlipped = !isFlipped;
+  document.getElementById("flashcard").classList.toggle("flipped", isFlipped);
+});
+document.getElementById("flashcard").addEventListener("keydown", e => {
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); document.getElementById("flashcard").click(); }
+});
+
+// Show/hide example sentence — shared handler for front+back sentence buttons
+function toggleExampleSentence(e) {
+  e.stopPropagation();
+  const sent = document.getElementById("exampleSentence");
+  const card = cardData[currentTopic]?.[cardOrder[cardIndex]];
+  if (!card?.example) return;
+  const visible = sent.classList.toggle("visible");
+  // Update both buttons' text to reflect state
+  const label = visible ? "Hide" : "Sentence";
+  document.getElementById("sentenceBackBtn").textContent  = label;
+  document.getElementById("sentenceFrontBtn").textContent = label;
+  if (!visible) {
+    document.getElementById("exampleTranslation").classList.remove("visible");
+    document.getElementById("exampleTranslation").textContent = "";
+    document.getElementById("tapHint").style.display = "";
+  }
+}
+document.getElementById("sentenceBackBtn").addEventListener("click", toggleExampleSentence);
+document.getElementById("sentenceFrontBtn").addEventListener("click", toggleExampleSentence);
+
+// TAP EXAMPLE SENTENCE → toggle English translation
+document.getElementById("exampleSentence").addEventListener("click", async (e) => {
+  e.stopPropagation();
+  const translEl = document.getElementById("exampleTranslation");
+  const tapHint  = document.getElementById("tapHint");
+  const card     = cardData[currentTopic]?.[cardOrder[cardIndex]];
+  if (!card?.example) return;
+
+  // Toggle: if translation is already showing, hide it
+  if (translEl.classList.contains("visible")) {
+    translEl.classList.remove("visible");
+    tapHint.textContent = "Tap for translation";
+    tapHint.style.display = "";
+    return;
+  }
+
+  // If we already have a cached translation, show it immediately
+  if (translEl.dataset.cached === card.example) {
+    translEl.classList.add("visible");
+    tapHint.style.display = "none";
+    return;
+  }
+
+  // Show loading state
+  tapHint.textContent = "Translating…";
+  const result = await translateToEnglish(card.example);
+  if (result) {
+    translEl.textContent     = "🇬🇧 " + result;
+    translEl.dataset.cached  = card.example;
+    translEl.classList.add("visible");
+    tapHint.style.display = "none";
+  } else {
+    // Fallback: show English word as reference
+    tapHint.textContent = "Translation unavailable offline";
+  }
+});
+
+// Next / Prev
+document.getElementById("nextBtn").addEventListener("click", () => {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) return;
+  stopSpeech();
+  cardIndex = (cardIndex + 1) % cards.length;
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+  renderCard();
+});
+document.getElementById("prevBtn").addEventListener("click", () => {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) return;
+  stopSpeech();
+  cardIndex = (cardIndex - 1 + cards.length) % cards.length;
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+  renderCard();
+});
+document.addEventListener("keydown", e => {
+  if (document.activeElement.tagName === "INPUT") return;
+  if (e.key === "ArrowRight") document.getElementById("nextBtn").click();
+  if (e.key === "ArrowLeft")  document.getElementById("prevBtn").click();
+});
+
+// Shuffle
+document.getElementById("shuffleBtn").addEventListener("click", () => {
+  stopSpeech();
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+  }
+  cardIndex = 0;
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+  renderCard();
+  showToast("Cards shuffled");
+});
+
+// Topic select
+document.getElementById("topicSelect").addEventListener("change", e => {
+  currentTopic = e.target.value;
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  resetOrder();
+  renderCard();
+});
+
+// Dialect
+document.getElementById("dialectSelect").addEventListener("change", e => {
+  dialect = e.target.value;
+  localStorage.setItem(LS_DIALECT, dialect);
+  renderCard();
+});
+
+// Display mode
+["modeEn", "modeEs"].forEach(id => {
+  document.getElementById(id).addEventListener("click", () => {
+    displayMode = id === "modeEn" ? "en" : "es";
+    localStorage.setItem(LS_MODE, displayMode);
+    document.getElementById("modeEn").classList.toggle("active", displayMode === "en");
+    document.getElementById("modeEs").classList.toggle("active", displayMode === "es");
+    isFlipped = false;
+    document.getElementById("flashcard").classList.remove("flipped");
+    renderCard();
+  });
+});
+
+/* ─── ADD NEW TOPIC + AUTO-GENERATE CARDS ─── */
+document.getElementById("addTopicBtn").addEventListener("click", () => {
+  const input = document.getElementById("newTopicInput");
+  const name  = input.value.trim().toLowerCase();
+  if (!name) { showToast("Enter a topic name first"); return; }
+  if (cardData[name]) { showToast(`"${topicLabel(name)}" already exists`); return; }
+
+  cardData[name] = [];
+  currentTopic   = name;
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  renderTopicSelects();
+  input.value = "";
+
+  // Auto-generate cards for this new topic
+  triggerAutoGenerate(name, true);
+});
+
+/* ─── DELETE TOPIC ─── */
+document.getElementById("deleteTopicBtn").addEventListener("click", () => {
+  if (!currentTopic) { showToast("No topic selected"); return; }
+  const label = topicLabel(currentTopic);
+  const isStarter = !!STARTER_DATA[currentTopic];
+  const confirmMsg = isStarter
+    ? `Delete "${label}"?\n\nThis is a built-in topic — your added cards will be lost but the original cards will return on next load.`
+    : `Delete "${label}"?\n\nAll ${cardData[currentTopic].length} card(s) will be permanently removed.`;
+  if (!confirm(confirmMsg)) return;
+
+  // Remove from cardData
+  delete cardData[currentTopic];
+
+  // Remove from localStorage delta
+  const stored = JSON.parse(localStorage.getItem(LS_CARDS) || "{}");
+  delete stored[currentTopic];
+  localStorage.setItem(LS_CARDS, JSON.stringify(stored));
+
+  // If it was a starter topic, re-seed it from STARTER_DATA so it comes back
+  if (isStarter) {
+    cardData[currentTopic] = [...STARTER_DATA[currentTopic]];
+    showToast(`"${label}" reset to original cards`);
+  } else {
+    // Switch to first remaining topic
+    const remaining = Object.keys(cardData);
+    currentTopic = remaining[0] || "";
+    localStorage.setItem(LS_TOPIC, currentTopic);
+    showToast(`"${label}" deleted`);
+  }
+
+  renderTopicSelects();
+  resetOrder();
+  renderCard();
+});
+
+/* ─── AUTO ADD CARDS (button in controls) ─── */
+document.getElementById("autoAddBtn").addEventListener("click", () => {
+  if (isGenerating) return;
+  if (!currentTopic) { showToast("Select a topic first"); return; }
+  triggerAutoGenerate(currentTopic, false);
+});
+
+/**
+ * generateCardsViaAI
+ * Calls the backend LLM API to generate cards for any topic.
+ * Falls back to local vocab banks if the API is unavailable.
+ */
+/* ============================================================
+   API KEY MANAGEMENT
+============================================================ */
+const LS_API_KEY = "esfc_pplx_key";
+
+function getApiKey() {
+  return localStorage.getItem(LS_API_KEY) || "";
+}
+
+function updateApiKeyUI() {
+  const key = getApiKey();
+  const statusEl = document.getElementById("apiKeyStatus");
+  const statusText = document.getElementById("apiKeyStatusText");
+  const icon = document.getElementById("apiKeyIcon");
+  if (key) {
+    statusEl.classList.add("has-key");
+    statusText.textContent = "Key saved — AI generation active";
+    icon.textContent = "✅";
+  } else {
+    statusEl.classList.remove("has-key");
+    statusText.textContent = "No key saved — using local vocab banks";
+    icon.textContent = "🔑";
+  }
+}
+
+document.getElementById("apiKeyBtn").addEventListener("click", () => {
+  const modal = document.getElementById("apiKeyModal");
+  const input = document.getElementById("apiKeyInput");
+  const key = getApiKey();
+  input.value = key ? "•".repeat(12) : "";
+  input.type = "password";
+  updateApiKeyUI();
+  modal.classList.remove("hidden");
+  if (!key) input.focus();
+});
+
+document.getElementById("apiKeyModal").addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.add("hidden");
+});
+
+document.getElementById("apiKeySave").addEventListener("click", () => {
+  const val = document.getElementById("apiKeyInput").value.trim();
+  if (!val || val.startsWith("•")) {
+    showToast("Enter a valid API key");
+    return;
+  }
+  localStorage.setItem(LS_API_KEY, val);
+  updateApiKeyUI();
+  document.getElementById("apiKeyModal").classList.add("hidden");
+  showToast("✓ API key saved — AI generation enabled", 3000);
+});
+
+document.getElementById("apiKeyClear").addEventListener("click", () => {
+  localStorage.removeItem(LS_API_KEY);
+  document.getElementById("apiKeyInput").value = "";
+  updateApiKeyUI();
+  showToast("API key cleared");
+});
+
+// Clear placeholder dots when user starts typing
+document.getElementById("apiKeyInput").addEventListener("focus", function() {
+  if (this.value.startsWith("•")) { this.value = ""; this.type = "text"; }
+});
+
+/* ============================================================
+   AI CARD GENERATION (direct browser → Perplexity API)
+============================================================ */
+async function generateCardsViaAI(topic, existing) {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    // No key — fall back silently to local banks
+    return generateCardsForTopic(topic, existing);
+  }
+
+  const existingEnglish = existing.map(c => c.en);
+  const existingStr = existingEnglish.slice(0, 40).join(", ") || "none";
+  const dialectNote = {
+    "Colombia":  "Use Colombian Spanish (standard Latin American, natural Bogotá/Medellín register).",
+    "Mexico":    "Use Mexican Spanish vocabulary and expressions.",
+    "Spain":     "Use Castilian Spanish (vosotros, leismo, ceceo).",
+    "Argentina": "Use Rioplatense Spanish (vos, lunfardo occasionally).",
+    "Peru":      "Use Peruvian Spanish, standard and clear.",
+    "Chile":     "Use Chilean Spanish.",
+    "Universal": "Use neutral, universal Spanish understood across all regions.",
+  }[dialect] || "Use neutral Latin American Spanish.";
+
+  const prompt = `You are a Spanish language teacher creating flashcards for an adult English speaker.
+
+Topic: "${topic}"
+Dialect: ${dialectNote}
+Already have (do NOT repeat): ${existingStr}
+
+Generate exactly 20 Spanish vocabulary flashcards for the topic "${topic}".
+Choose words and phrases that are genuinely relevant and useful for this specific topic.
+
+Return ONLY a valid JSON array — no markdown, no explanation, no code fences.
+Each object must have exactly:
+- "en": English word or short phrase
+- "es": Spanish translation (with article if a noun, e.g. "el perro")
+- "example": a natural Spanish sentence using the word (15-25 words)
+
+[
+  {"en": "example", "es": "el ejemplo", "example": "Este es un ejemplo de una oración natural en español."}
+]`;
+
+  try {
+    const res = await fetch("https://api.perplexity.ai/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "sonar",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.3,
+        max_tokens: 4000,
+        disable_search: true,
+      }),
+    });
+
+    if (res.status === 401) {
+      showToast("❌ Invalid API key — check your key in 🔑 settings", 4000);
+      return generateCardsForTopic(topic, existing);
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    const raw = data.choices?.[0]?.message?.content?.trim() || "";
+
+    // Strip markdown code fences if present
+    const cleaned = raw.replace(/^```(?:json)?\s*/m, "").replace(/\s*```$/m, "").trim();
+    const parsed = JSON.parse(cleaned);
+
+    const existSet = new Set(existingEnglish.map(e => e.toLowerCase()));
+    const cards = parsed
+      .filter(c => c.en && c.es && c.example && !existSet.has(c.en.toLowerCase()))
+      .map(c => ({ en: String(c.en).trim(), es: String(c.es).trim(), example: String(c.example).trim() }))
+      .slice(0, 20);
+
+    if (cards.length === 0) throw new Error("No valid cards in response");
+    return cards;
+
+  } catch (err) {
+    console.warn("Perplexity API error, falling back to local banks:", err);
+    showToast("AI generation failed — using local vocab", 3000);
+    return generateCardsForTopic(topic, existing);
+  }
+}
+
+/**
+ * triggerAutoGenerate
+ * Shows loading UI, generates 20 cards via AI (or fallback), saves them, and renders.
+ * @param {string}  topic     - Topic key to generate for
+ * @param {boolean} isNewTopic - Whether this is a brand new topic
+ */
+async function triggerAutoGenerate(topic, isNewTopic) {
+  if (isGenerating) return;
+  isGenerating = true;
+
+  const label = topicLabel(topic);
+  setAILoading(true,
+    isNewTopic ? `Creating cards for "${label}"…` : `Adding more cards to "${label}"…`,
+    "AI is generating 20 flashcards — just a moment"
+  );
+
+  const existing  = cardData[topic] || [];
+  const newCards  = await generateCardsViaAI(topic, existing);
+
+  if (!newCards.length) {
+    setAILoading(false);
+    showToast("No new cards to add — all vocabulary already added!");
+    isGenerating = false;
+    return;
+  }
+
+  cardData[topic] = [...existing, ...newCards];
+  saveUserCards();
+
+  // Navigate to this topic
+  currentTopic = topic;
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  renderTopicSelects();
+  document.getElementById("topicSelect").value = topic;
+
+  // Jump to first new card
+  cardOrder = cardData[topic].map((_, i) => i);
+  cardIndex = existing.length; // start at the first new card
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+
+  setAILoading(false);
+  renderCard();
+  showToast(`✓ Added ${newCards.length} cards to ${label}`, 3000);
+  isGenerating = false;
+}
+
+/* ─── MANUAL ADD CARD ─── */
+document.getElementById("saveCardBtn").addEventListener("click", () => {
+  const topic   = document.getElementById("cardTopicSelect").value;
+  const english = document.getElementById("newEnglish").value.trim();
+  const spanish = document.getElementById("newSpanish").value.trim();
+  const example = document.getElementById("newExample").value.trim();
+  if (!topic)   { showToast("Please select a topic"); return; }
+  if (!english) { showToast("English field is required"); return; }
+  if (!spanish) { showToast("Spanish field is required"); return; }
+
+  cardData[topic].push({ en: english, es: spanish, example: example || "" });
+  saveUserCards();
+
+  currentTopic = topic;
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  cardOrder = cardData[topic].map((_, i) => i);
+  cardIndex = cardOrder.length - 1;
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+  renderTopicSelects();
+  renderCard();
+
+  document.getElementById("newEnglish").value = "";
+  document.getElementById("newSpanish").value = "";
+  document.getElementById("newExample").value = "";
+
+  showToast("Card saved");
+  setActiveTab("tabStudy");
+});
+
+/* ─── TABS ─── */
+function setActiveTab(tab) {
+  ["tabStudy", "tabAdd", "tabImport"].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.toggle("active", id === tab);
+    el.setAttribute("aria-pressed", id === tab ? "true" : "false");
+  });
+  document.getElementById("addPanel").classList.toggle("hidden", tab !== "tabAdd");
+  document.getElementById("importPanel").classList.toggle("hidden", tab !== "tabImport");
+}
+
+document.getElementById("tabStudy").addEventListener("click", () => setActiveTab("tabStudy"));
+document.getElementById("tabAdd").addEventListener("click", () => {
+  setActiveTab("tabAdd");
+  document.getElementById("cardTopicSelect").value = currentTopic;
+});
+document.getElementById("tabImport").addEventListener("click", () => {
+  setActiveTab("tabImport");
+  document.getElementById("importTopicSelect").value = currentTopic;
+  updateImportCount();
+});
+
+/* ─── IMPORT PANEL ─── */
+
+function parseImportText(raw) {
+  // Parse lines formatted as: english | spanish [| example]
+  // or tab-separated: english \t spanish [\t example]
+  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const cards = [];
+  for (const line of lines) {
+    // Skip header-like lines (e.g. "English,Spanish" or "en,es")
+    if (/^(english|en|word|term)[,\t|]/i.test(line)) continue;
+
+    let parts;
+    if (line.includes("|")) {
+      parts = line.split("|").map(s => s.trim());
+    } else if (line.includes("\t")) {
+      parts = line.split("\t").map(s => s.trim());
+    } else if (line.includes(",")) {
+      // CSV: handle quoted fields
+      parts = line.match(/(?:"([^"]*)"|([^,]+))(?:,|$)/g)
+        ?.map(m => m.replace(/^"?|"?,?$/g, "").trim()) || line.split(",").map(s => s.trim());
+    } else {
+      continue; // can't parse
+    }
+
+    const en = parts[0];
+    const es = parts[1];
+    const example = parts[2] || "";
+    if (en && es) cards.push({ en, es, example });
+  }
+  return cards;
+}
+
+function updateImportCount() {
+  const raw = document.getElementById("importTextarea").value;
+  const cards = parseImportText(raw);
+  const el = document.getElementById("importCount");
+  el.textContent = cards.length > 0 ? `${cards.length} card${cards.length !== 1 ? "s" : ""} detected` : "";
+}
+
+document.getElementById("importTextarea").addEventListener("input", updateImportCount);
+
+// File upload → populate textarea
+document.getElementById("importFileInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const text = ev.target.result;
+    // Convert to pipe-format for display (keeps textarea editable)
+    document.getElementById("importTextarea").value = text;
+    updateImportCount();
+    showToast(`File loaded — review then click Import Cards`);
+  };
+  reader.readAsText(file);
+  e.target.value = ""; // allow re-upload of same file
+});
+
+document.getElementById("importClearBtn").addEventListener("click", () => {
+  document.getElementById("importTextarea").value = "";
+  updateImportCount();
+});
+
+document.getElementById("importBtn").addEventListener("click", () => {
+  const topic = document.getElementById("importTopicSelect").value;
+  if (!topic) { showToast("Select a topic first"); return; }
+
+  const raw = document.getElementById("importTextarea").value;
+  const newCards = parseImportText(raw);
+  if (!newCards.length) { showToast("No valid cards found — check the format"); return; }
+
+  // Deduplicate against existing cards in this topic
+  const existing = cardData[topic] || [];
+  const existingSet = new Set(existing.map(c => c.en.toLowerCase()));
+  const toAdd = newCards.filter(c => !existingSet.has(c.en.toLowerCase()));
+  const dupes = newCards.length - toAdd.length;
+
+  if (!toAdd.length) {
+    showToast("All cards already exist in this topic");
+    return;
+  }
+
+  cardData[topic] = [...existing, ...toAdd];
+  saveUserCards();
+
+  currentTopic = topic;
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  renderTopicSelects();
+  resetOrder();
+  renderCard();
+
+  const dupeNote = dupes > 0 ? ` (${dupes} duplicate${dupes !== 1 ? "s" : ""} skipped)` : "";
+  showToast(`✓ Imported ${toAdd.length} cards into ${topicLabel(topic)}${dupeNote}`, 3500);
+
+  // Clear textarea and go to study
+  document.getElementById("importTextarea").value = "";
+  updateImportCount();
+  setActiveTab("tabStudy");
+});
+
+/* ─── DARK MODE ─── */
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+  setTheme(isDark ? "light" : "dark");
+});
+function setTheme(t) {
+  document.documentElement.setAttribute("data-theme", t);
+  localStorage.setItem(LS_THEME, t);
+  document.getElementById("themeIcon").textContent  = t === "dark" ? "🌙" : "☀️";
+  document.getElementById("themeLabel").textContent = t === "dark" ? "Dark" : "Light";
+}
+
+/* ─── SWIPE (mobile) ─── */
+let touchStartX = 0, touchStartY = 0;
+document.getElementById("flashcard").addEventListener("touchstart", e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+document.getElementById("flashcard").addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (dx < 0) document.getElementById("nextBtn").click();
+    else         document.getElementById("prevBtn").click();
+  }
+}, { passive: true });
+
+/* ============================================================
+   SPEECH / AUDIO
+   Uses the Web Speech API (SpeechSynthesis) — built into
+   Safari, Chrome, Firefox. No API key or network needed.
+
+   DIALECT → LANGUAGE CODE MAPPING
+   Each dialect maps to a BCP-47 lang code. The engine tries
+   the most specific voice first (e.g. es-CO), then falls
+   back through es-419 → es-US → es-MX → es-ES → es.
+
+   To adjust speech rate or pitch, edit SPEECH_RATE / SPEECH_PITCH.
+============================================================ */
+const DIALECT_LANG = {
+  "Colombia":  "es-CO",
+  "Mexico":    "es-MX",
+  "Spain":     "es-ES",
+  "Argentina": "es-AR",
+  "Peru":      "es-PE",
+  "Chile":     "es-CL",
+  "Universal": "es",
+};
+
+const SPEECH_RATE  = 0.88;   // 0.1–10, default 1. Lower = slower / clearer.
+const SPEECH_PITCH = 1.0;    // 0–2, default 1.
+
+// Cache voices once loaded
+let _voices = [];
+function loadVoices() {
+  _voices = window.speechSynthesis.getVoices();
+}
+loadVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+/**
+ * getBestVoice(lang)
+ * Picks the closest available voice for a given BCP-47 code.
+ * Tries exact match → prefix match → generic 'es' → first Spanish voice.
+ */
+function getBestVoice(lang) {
+  const voices = _voices.length ? _voices : window.speechSynthesis.getVoices();
+  const exact  = voices.find(v => v.lang === lang);
+  if (exact) return exact;
+  // Prefix match: "es-CO" → find any "es-CO*"
+  const prefix = voices.find(v => v.lang.startsWith(lang));
+  if (prefix) return prefix;
+  // Fallback chain: es-419, es-US, es-MX, es-ES, es
+  const fallbacks = ["es-419", "es-US", "es-MX", "es-ES", "es"];
+  for (const fb of fallbacks) {
+    const found = voices.find(v => v.lang === fb || v.lang.startsWith(fb));
+    if (found) return found;
+  }
+  // Last resort: any Spanish voice
+  return voices.find(v => v.lang.startsWith("es")) || null;
+}
+
+/**
+ * speak(text, lang, btnEl)
+ * Cancels any current speech and reads `text` aloud.
+ * Animates btnEl with the .speaking class while reading.
+ * @param {string}      text  - Text to speak
+ * @param {string}      lang  - BCP-47 language code (e.g. "es-CO", "en-US")
+ * @param {HTMLElement} btnEl - The audio button element to animate
+ */
+function speak(text, lang, btnEl) {
+  if (!window.speechSynthesis) {
+    showToast("Speech not supported in this browser");
+    return;
+  }
+  // Stop any current utterance
+  window.speechSynthesis.cancel();
+
+  // Remove speaking state from all buttons
+  document.querySelectorAll(".audio-btn").forEach(b => b.classList.remove("speaking"));
+
+  const utt   = new SpeechSynthesisUtterance(text);
+  utt.lang    = lang;
+  utt.rate    = SPEECH_RATE;
+  utt.pitch   = SPEECH_PITCH;
+
+  const voice = getBestVoice(lang);
+  if (voice) utt.voice = voice;
+
+  // Animate button while speaking
+  if (btnEl) {
+    btnEl.classList.add("speaking");
+    utt.onend   = () => btnEl.classList.remove("speaking");
+    utt.onerror = () => btnEl.classList.remove("speaking");
+  }
+
+  window.speechSynthesis.speak(utt);
+}
+
+/**
+ * getCurrentCard()
+ * Returns the active card object.
+ */
+function getCurrentCard() {
+  return cardData[currentTopic]?.[cardOrder[cardIndex]] || null;
+}
+
+// Single Listen button — always reads Spanish (outside card, no flip artifact)
+document.getElementById("audioBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const card = getCurrentCard();
+  if (!card) return;
+  speak(card.es, DIALECT_LANG[dialect] || "es", e.currentTarget);
+});
+
+// Example sentence listen button — main view
+document.getElementById("exampleListenBtn").addEventListener("click", (e) => {
+  e.stopPropagation(); // don't trigger tap-to-translate on the parent
+  const card = getCurrentCard();
+  if (!card?.example) return;
+  speak(card.example, DIALECT_LANG[dialect] || "es", e.currentTarget);
+});
+
+// Example sentence listen button — focus overlay
+document.getElementById("focusExampleListenBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const card = getCurrentCard();
+  if (!card?.example) return;
+  speak(card.example, DIALECT_LANG[dialect] || "es", e.currentTarget);
+});
+
+// Stop speech when navigating to a new card
+function stopSpeech() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.querySelectorAll(".audio-btn").forEach(b => b.classList.remove("speaking"));
+}
+
+/* ============================================================
+   FOCUS MODE
+   A full-screen overlay showing only the card + nav controls.
+   Shares the same cardData / cardOrder / cardIndex state as
+   the main view so both stay in sync.
+============================================================ */
+let focusFlipped = false;
+
+/** Populate the focus card from current state */
+function renderFocusCard() {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) return;
+  const card  = cards[cardOrder[cardIndex]];
+  const front = displayMode === "en" ? card.en : card.es;
+  const back  = displayMode === "en" ? card.es : card.en;
+  const label = topicLabel(currentTopic);
+
+  document.getElementById("focusFrontBadge").textContent = label;
+  document.getElementById("focusBackBadge").textContent  = label;
+  document.getElementById("focusFrontWord").textContent  = front;
+  document.getElementById("focusBackWord").textContent   = back;
+  document.getElementById("focusExampleText").textContent = card.example || "";
+  document.getElementById("focusTapHint").style.display   = card.example ? "" : "none";
+
+  // Reset example + translation
+  document.getElementById("focusExampleSentence").classList.remove("visible");
+  document.getElementById("focusExampleTranslation").classList.remove("visible");
+  document.getElementById("focusExampleTranslation").textContent = "";
+  document.getElementById("focusTapHint").textContent = "Tap for translation";
+
+  // Sentence button visibility
+  const hasSentenceF = !!card.example;
+  document.getElementById("focusSentenceBackBtn").style.display  = (displayMode === "en" && hasSentenceF) ? "" : "none";
+  document.getElementById("focusSentenceBackBtn").textContent    = "Sentence";
+  document.getElementById("focusSentenceFrontBtn").style.display = (displayMode === "es" && hasSentenceF) ? "" : "none";
+  document.getElementById("focusSentenceFrontBtn").textContent   = "Sentence";
+
+  // Sync flip state
+  focusFlipped = false;
+  document.getElementById("focusCard").classList.remove("flipped");
+
+  // Progress
+  const pct = cards.length > 1 ? ((cardIndex + 1) / cards.length) * 100 : 100;
+  document.getElementById("focusProgressFill").style.width = pct + "%";
+  document.getElementById("focusCount").textContent = `${cardIndex + 1} / ${cards.length}`;
+}
+
+/** Open focus mode */
+function enterFocus() {
+  stopSpeech();
+  renderFocusCard();
+  document.getElementById("focusOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+/** Close focus mode */
+function exitFocus() {
+  stopSpeech();
+  document.getElementById("focusOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+  // Sync main view in case user navigated in focus mode
+  renderCard();
+}
+
+// Enter focus
+document.getElementById("focusBtn").addEventListener("click", enterFocus);
+
+// Exit focus
+document.getElementById("focusExitBtn").addEventListener("click", exitFocus);
+
+// Escape key exits
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && document.getElementById("focusOverlay").classList.contains("active")) {
+    exitFocus();
+  }
+});
+
+// Focus card flip
+document.getElementById("focusCard").addEventListener("click", () => {
+  focusFlipped = !focusFlipped;
+  document.getElementById("focusCard").classList.toggle("flipped", focusFlipped);
+});
+document.getElementById("focusCard").addEventListener("keydown", e => {
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); document.getElementById("focusCard").click(); }
+});
+
+// Focus next / prev / shuffle
+document.getElementById("focusNextBtn").addEventListener("click", () => {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) return;
+  stopSpeech();
+  cardIndex = (cardIndex + 1) % cards.length;
+  renderFocusCard();
+  renderCard(); // keep main in sync
+});
+document.getElementById("focusPrevBtn").addEventListener("click", () => {
+  const cards = cardData[currentTopic] || [];
+  if (!cards.length) return;
+  stopSpeech();
+  cardIndex = (cardIndex - 1 + cards.length) % cards.length;
+  renderFocusCard();
+  renderCard();
+});
+document.getElementById("focusShuffleBtn").addEventListener("click", () => {
+  stopSpeech();
+  for (let i = cardOrder.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cardOrder[i], cardOrder[j]] = [cardOrder[j], cardOrder[i]];
+  }
+  cardIndex = 0;
+  renderFocusCard();
+  renderCard();
+  showToast("Cards shuffled");
+});
+
+// Focus Listen button — single button outside card, always Spanish
+document.getElementById("focusAudioBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const card = getCurrentCard();
+  if (!card) return;
+  speak(card.es, DIALECT_LANG[dialect] || "es", e.currentTarget);
+});
+
+// Focus example sentence — shared handler for front+back sentence buttons
+function toggleFocusExampleSentence(e) {
+  e.stopPropagation();
+  const card = getCurrentCard();
+  const sent = document.getElementById("focusExampleSentence");
+  if (!card?.example) return;
+  const visible = sent.classList.toggle("visible");
+  const label = visible ? "Hide" : "Sentence";
+  document.getElementById("focusSentenceBackBtn").textContent  = label;
+  document.getElementById("focusSentenceFrontBtn").textContent = label;
+  if (!visible) {
+    document.getElementById("focusExampleTranslation").classList.remove("visible");
+    document.getElementById("focusExampleTranslation").textContent = "";
+    document.getElementById("focusTapHint").textContent = "Tap for translation";
+  }
+}
+document.getElementById("focusSentenceBackBtn").addEventListener("click", toggleFocusExampleSentence);
+document.getElementById("focusSentenceFrontBtn").addEventListener("click", toggleFocusExampleSentence);
+
+// Focus example tap-to-translate
+document.getElementById("focusExampleSentence").addEventListener("click", async (e) => {
+  e.stopPropagation();
+  const translEl = document.getElementById("focusExampleTranslation");
+  const tapHint  = document.getElementById("focusTapHint");
+  const card     = getCurrentCard();
+  if (!card?.example) return;
+  if (translEl.classList.contains("visible")) {
+    translEl.classList.remove("visible");
+    tapHint.textContent = "Tap for translation";
+    return;
+  }
+  if (translEl.dataset.cached === card.example) {
+    translEl.classList.add("visible");
+    tapHint.style.display = "none";
+    return;
+  }
+  tapHint.textContent = "Translating…";
+  const result = await translateToEnglish(card.example);
+  if (result) {
+    translEl.textContent    = "🇬🇧 " + result;
+    translEl.dataset.cached = card.example;
+    translEl.classList.add("visible");
+    tapHint.style.display = "none";
+  } else {
+    tapHint.textContent = "Translation unavailable offline";
+  }
+});
+
+// Focus swipe (left = next, right = prev)
+let focusTouchX = 0, focusTouchY = 0;
+document.getElementById("focusCard").addEventListener("touchstart", e => {
+  focusTouchX = e.touches[0].clientX;
+  focusTouchY = e.touches[0].clientY;
+}, { passive: true });
+document.getElementById("focusCard").addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - focusTouchX;
+  const dy = e.changedTouches[0].clientY - focusTouchY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    if (dx < 0) document.getElementById("focusNextBtn").click();
+    else         document.getElementById("focusPrevBtn").click();
+  }
+}, { passive: true });
+
+/* ============================================================
+   INIT
+============================================================ */
+(function init() {
+  loadStoredData();
+
+  const savedTheme   = localStorage.getItem(LS_THEME)   || "dark";
+  const savedMode    = localStorage.getItem(LS_MODE)    || "en";
+  const savedDialect = localStorage.getItem(LS_DIALECT) || "Colombia";
+  const savedTopic   = localStorage.getItem(LS_TOPIC);
+
+  setTheme(savedTheme);
+  updateApiKeyUI();
+
+  displayMode = savedMode;
+  document.getElementById("modeEn").classList.toggle("active", displayMode === "en");
+  document.getElementById("modeEs").classList.toggle("active", displayMode === "es");
+
+  dialect = savedDialect;
+  document.getElementById("dialectSelect").value = savedDialect;
+
+  const topics = Object.keys(cardData);
+  currentTopic = (savedTopic && cardData[savedTopic]) ? savedTopic : (topics[0] || "");
+
+  renderTopicSelects();
+  document.getElementById("topicSelect").value = currentTopic;
+  resetOrder();
+  renderCard();
+})();
+</script>
+</body>
+</html>
