@@ -612,6 +612,21 @@
       flex-shrink: 0;
     }
     .btn-delete-topic:hover { background: rgba(224,85,85,.12); border-color: #e05555; }
+    /* Delete individual card button — sits top-left of card-scene */
+    .card-delete-btn {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 10;
+      background: transparent;
+      border: none;
+      color: rgba(180,60,60,0.55);
+      padding: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: color .15s, background .15s;
+      line-height: 0;
+    }
+    .card-delete-btn:hover { color: #e05555; background: rgba(224,85,85,.12); }
     .btn-primary {
       background: var(--accent);
       color: #fff;
@@ -981,6 +996,10 @@
           <button class="btn-sentence" id="sentenceBackBtn" aria-label="Show example sentence">Sentence</button>
         </div>
       </div>
+      <!-- Delete card button — top-left of card-scene, never flips -->
+      <button class="card-delete-btn" id="cardDeleteBtn" title="Delete this card" aria-label="Delete this card">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V2.5A.5.5 0 0 1 5.5 2h5a.5.5 0 0 1 .5.5V4M6 7v5M10 7v5M3.5 4l.8 9.5a.5.5 0 0 0 .5.5h6.4a.5.5 0 0 0 .5-.5L12.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
       <!-- Listen button inside card-scene (no preserve-3d here) — never flips -->
       <button class="audio-btn" id="audioBtn" aria-label="Listen to Spanish pronunciation">
         <svg class="audio-wave-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -1056,11 +1075,12 @@
   <!-- IMPORT PANEL -->
   <div class="import-panel hidden" id="importPanel">
     <p class="panel-title" style="margin:0 0 2px">Paste &amp; Import</p>
-    <p class="import-hint">One card per line. Format: <code>english | spanish</code> or <code>english &nbsp; spanish</code> (tab). Paste straight from a spreadsheet.<br>Optionally add an example: <code>english | spanish | example sentence</code></p>
+    <p class="import-hint">Each card is two lines: <strong>Spanish first</strong>, then English. A blank line separates cards. Optionally add a 3rd line for an example sentence.</p>
+    <p class="import-hint" style="margin-top:4px">Example:<br><code>Hola<br>Hello</code><br><br><code>Buenos días<br>Good morning<br>Buenos días, ¿cómo estás?</code></p>
     <div class="select-wrap">
       <select id="importTopicSelect" aria-label="Import into topic"></select>
     </div>
-    <textarea class="import-textarea" id="importTextarea" placeholder="hello | hola&#10;goodbye | adiós&#10;thank you | gracias"></textarea>
+    <textarea class="import-textarea" id="importTextarea" placeholder="Hola&#10;Hello&#10;&#10;Buenos días&#10;Good morning&#10;&#10;Gracias&#10;Thank you"></textarea>
     <div class="import-actions">
       <span class="import-count" id="importCount"></span>
       <button class="btn btn-secondary" id="importClearBtn" style="font-size:13px;padding:8px 14px">Clear</button>
@@ -2235,6 +2255,40 @@ document.getElementById("addTopicBtn").addEventListener("click", () => {
   triggerAutoGenerate(name, true);
 });
 
+/* ─── DELETE INDIVIDUAL CARD ─── */
+document.getElementById("cardDeleteBtn").addEventListener("click", () => {
+  const cards = cardData[currentTopic];
+  if (!cards || !cards.length) return;
+  const realIndex = cardOrder[cardIndex];
+  const card = cards[realIndex];
+  if (!confirm(`Delete "${card.en}"?`)) return;
+
+  // Remove card from data
+  cardData[currentTopic].splice(realIndex, 1);
+  saveUserCards();
+
+  // Rebuild order without the deleted index
+  const newLen = cardData[currentTopic].length;
+  if (!newLen) {
+    cardOrder = [];
+    cardIndex = 0;
+    renderCard();
+    renderTopicSelects();
+    return;
+  }
+  // Remap cardOrder: remove deleted, adjust indices
+  cardOrder = cardOrder
+    .filter(i => i !== realIndex)
+    .map(i => i > realIndex ? i - 1 : i);
+  // Keep cardIndex in bounds
+  if (cardIndex >= cardOrder.length) cardIndex = cardOrder.length - 1;
+  isFlipped = false;
+  document.getElementById("flashcard").classList.remove("flipped");
+  renderTopicSelects();
+  renderCard();
+  showToast("Card deleted");
+});
+
 /* ─── DELETE TOPIC ─── */
 document.getElementById("deleteTopicBtn").addEventListener("click", () => {
   if (!currentTopic) { showToast("No topic selected"); return; }
@@ -2546,31 +2600,17 @@ document.getElementById("tabImport").addEventListener("click", () => {
 /* ─── IMPORT PANEL ─── */
 
 function parseImportText(raw) {
-  // Parse lines formatted as: english | spanish [| example]
-  // or tab-separated: english \t spanish [\t example]
-  const lines = raw.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  // Format: Spanish line, English line, optional example line, blank line between cards
   const cards = [];
-  for (const line of lines) {
-    // Skip header-like lines (e.g. "English,Spanish" or "en,es")
-    if (/^(english|en|word|term)[,\t|]/i.test(line)) continue;
-
-    let parts;
-    if (line.includes("|")) {
-      parts = line.split("|").map(s => s.trim());
-    } else if (line.includes("\t")) {
-      parts = line.split("\t").map(s => s.trim());
-    } else if (line.includes(",")) {
-      // CSV: handle quoted fields
-      parts = line.match(/(?:"([^"]*)"|([^,]+))(?:,|$)/g)
-        ?.map(m => m.replace(/^"?|"?,?$/g, "").trim()) || line.split(",").map(s => s.trim());
-    } else {
-      continue; // can't parse
-    }
-
-    const en = parts[0];
-    const es = parts[1];
-    const example = parts[2] || "";
-    if (en && es) cards.push({ en, es, example });
+  // Split into blocks by blank lines
+  const blocks = raw.split(/\r?\n\s*\r?\n/);
+  for (const block of blocks) {
+    const lines = block.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (lines.length < 2) continue;
+    const es      = lines[0];
+    const en      = lines[1];
+    const example = lines[2] || "";
+    if (es && en) cards.push({ en, es, example });
   }
   return cards;
 }
