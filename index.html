@@ -4,11 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Español Flashcards</title>
+  <meta name="theme-color" content="#000000" />
+  <script>
+    try { document.documentElement.setAttribute("data-theme", localStorage.getItem("esfc_theme") || "dark"); }
+    catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }
+    document.documentElement.classList.add("preload");
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    .preload *, .preload *::before, .preload *::after { transition: none !important; animation: none !important; }
     .nav-row > * { min-width: 0; }
     .nav-row .btn-icon { flex-shrink: 0; }
     /* ── DESIGN TOKENS ── */
@@ -273,7 +280,12 @@
       transition: box-shadow var(--ui-speed), background var(--ui-speed), border-color var(--ui-speed);
     }
     .card:hover .card-face { box-shadow: var(--card-shadow-lg); }
-    .card-front { background: var(--surface); border: 1.5px solid var(--border); }
+    .card-front { background: var(--surface); border: 1.5px solid var(--border); transform: rotateY(0deg); }
+    /* Hide whichever face is turned away (doesn't rely on backface-visibility alone).
+       The swap happens half-way through the flip, when the card is edge-on. */
+    .card .card-face { transition: visibility 0s linear calc(var(--flip-speed) / 2); }
+    .card:not(.flipped) .card-back,
+    .card.flipped .card-front { visibility: hidden; }
     .card-back {
       background: var(--accent-soft);
       border: 1.5px solid color-mix(in srgb, var(--accent) 40%, transparent);
@@ -751,8 +763,10 @@
       transition: opacity .2s, transform .2s;
       pointer-events: none;
       z-index: 9999;
-      white-space: nowrap;
-      max-width: 90vw;
+      white-space: normal;
+      width: max-content;
+      max-width: min(90vw, 360px);
+      line-height: 1.4;
       text-align: center;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -765,10 +779,13 @@
 
     /* ── FOCUS MODE (fullscreen card view) ── */
     /* Button sits top-right of the card area */
+    .count-row { position: relative; display: flex; align-items: center; justify-content: center; min-height: 34px; flex-shrink: 0; }
+    .count-row .card-count { margin: 0; }
     .focus-btn {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 50%;
+      right: 2px;
+      transform: translateY(-50%);
       z-index: 10;
       display: flex;
       align-items: center;
@@ -786,7 +803,7 @@
       flex-shrink: 0;
     }
     .focus-btn:hover { color: var(--text-1); border-color: var(--accent); }
-    .focus-btn:active { transform: scale(0.92); }
+    .focus-btn:active { transform: translateY(-50%) scale(0.92); }
     /* Wrapper so we can position the focus-btn relative to card-area */
     .card-area-wrap {
       position: relative;
@@ -896,7 +913,7 @@
   <div class="modal-backdrop hidden" id="apiKeyModal">
     <div class="modal-box">
       <h2>AI Card Generation</h2>
-      <p>Enter your API key to enable AI card generation. Get one free at <a href="https://console.perplexity.ai/project/keys" target="_blank" style="color:var(--accent)">console.perplexity.ai</a>.</p>
+      <p>Enter your API key to enable AI card generation. Get one at <a href="https://console.perplexity.ai/project/keys" target="_blank" style="color:var(--accent)">console.perplexity.ai</a>.</p>
       <input type="password" id="apiKeyInput" placeholder="pplx-…" autocomplete="off" spellcheck="false" />
       <div class="api-key-status" id="apiKeyStatus">
         <span class="key-dot"></span><span id="apiKeyStatusText">No key saved</span>
@@ -945,17 +962,18 @@
   <div class="progress-bar-wrap" role="progressbar">
     <div class="progress-bar-fill" id="progressFill"></div>
   </div>
-  <p class="card-count" id="cardCount">– / –</p>
+  <div class="count-row">
+    <p class="card-count" id="cardCount">– / –</p>
+    <!-- Fullscreen button: right side of the counter row, clear of the card -->
+    <button class="focus-btn" id="focusBtn" aria-label="Enter focus mode" title="Focus mode">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 5V1.5A.5.5 0 0 1 1.5 1H5M9 1h3.5a.5.5 0 0 1 .5.5V5M13 9v3.5a.5.5 0 0 1-.5.5H9M5 13H1.5a.5.5 0 0 1-.5-.5V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
 
   <!-- CARD AREA WRAPPER (relative, so focus-btn can be positioned) -->
   <div class="card-area-wrap">
-  <!-- Focus mode button: top-right corner above card -->
-  <button class="focus-btn" id="focusBtn" aria-label="Enter focus mode" title="Focus mode">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-      <path d="M1 5V1.5A.5.5 0 0 1 1.5 1H5M9 1h3.5a.5.5 0 0 1 .5.5V5M13 9v3.5a.5.5 0 0 1-.5.5H9M5 13H1.5a.5.5 0 0 1-.5-.5V9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </button>
-
   <!-- CARD AREA -->
   <div class="card-area" id="cardArea">
     <!-- AI loading state (shown during generation) -->
@@ -1234,7 +1252,7 @@ const STARTER_DATA = {
     { en: "Water",               es: "El agua",               example: "Quisiera un vaso de agua, por favor." },
     { en: "Coffee",              es: "El café",               example: "El café de Colombia es el mejor del mundo." },
     { en: "Bread",               es: "El pan",                example: "Me como una arepa en vez de pan." },
-    { en: "Chicken",             es: "El pollo",              example: "El bandeja paisa lleva pollo y chicharrón." },
+    { en: "Chicken",             es: "El pollo",              example: "El sancocho de gallina lleva pollo, papa y yuca." },
     { en: "Beef",                es: "La carne de res",       example: "¿Cuánto vale la carne de res?" },
     { en: "Fruit",               es: "La fruta",              example: "Colombia tiene muchas frutas tropicales." },
     { en: "Rice",                es: "El arroz",              example: "El arroz con leche es un postre clásico." },
@@ -1264,7 +1282,7 @@ const STARTER_DATA = {
     { en: "Price / Rate",        es: "El precio / La tarifa", example: "¿Cuál es el precio por metro cuadrado?" },
     { en: "Real estate",         es: "Los bienes raíces",     example: "Quiero invertir en bienes raíces en Medellín." },
     { en: "Bank account",        es: "La cuenta bancaria",    example: "Necesito abrir una cuenta bancaria." },
-    { en: "Deadline",            es: "La fecha límite",       example: "¿Cuál es el plazo de entrega?" },
+    { en: "Deadline",            es: "La fecha límite",       example: "La fecha límite del proyecto es el viernes." },
     { en: "Partner",             es: "El socio",              example: "Estoy buscando un socio para el negocio." },
     { en: "Profit",              es: "La ganancia",           example: "Las ganancias del primer trimestre fueron buenas." },
     { en: "Let's talk business", es: "Hablemos de negocios",  example: "Cuando quieras, hablemos de negocios." },
@@ -1292,32 +1310,53 @@ const LS_TOPIC   = "esfc_topic";
 const LS_MODE    = "esfc_mode";
 const LS_DIALECT = "esfc_dialect";
 
+const LS_DATA    = "esfc_data_v2";   // full snapshot of every topic & card
+
+function cleanCards(list) {
+  return (Array.isArray(list) ? list : [])
+    .filter(c => c && c.en && c.es)
+    .map(c => ({ en: String(c.en), es: String(c.es), example: String(c.example || "") }));
+}
+
 function loadStoredData() {
-  const stored = JSON.parse(localStorage.getItem(LS_CARDS) || "{}");
+  // Current format: a full snapshot (so deleted cards/topics stay deleted)
+  let snap = null;
+  try { snap = JSON.parse(localStorage.getItem(LS_DATA) || "null"); } catch { snap = null; }
+  if (snap && snap.topics && typeof snap.topics === "object") {
+    cardData = {};
+    for (const t of Object.keys(snap.topics)) cardData[t] = cleanCards(snap.topics[t]);
+    return;
+  }
+  // Older format: starter cards + saved extras. Merge once, then save as a snapshot.
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(LS_CARDS) || "{}") || {}; } catch { stored = {}; }
   cardData = {};
   for (const t in STARTER_DATA) cardData[t] = [...STARTER_DATA[t]];
-  for (const t in stored) {
+  for (const t of Object.keys(stored)) {
+    const extra = cleanCards(stored[t]);
     if (cardData[t]) {
       const existing = new Set(cardData[t].map(c => c.en + "|" + c.es));
-      for (const c of stored[t]) {
-        if (!existing.has(c.en + "|" + c.es)) cardData[t].push(c);
-      }
+      for (const c of extra) if (!existing.has(c.en + "|" + c.es)) cardData[t].push(c);
     } else {
-      cardData[t] = [...stored[t]];
+      cardData[t] = extra;
     }
   }
+  saveUserCards();
 }
 
 function saveUserCards() {
-  const delta = {};
-  for (const t in cardData) {
-    const starterCards = STARTER_DATA[t] || [];
-    const starterSet   = new Set(starterCards.map(c => c.en + "|" + c.es));
-    const extra        = cardData[t].filter(c => !starterSet.has(c.en + "|" + c.es));
-    if (!STARTER_DATA[t]) delta[t] = cardData[t];
-    else if (extra.length) delta[t] = extra;
+  try {
+    localStorage.setItem(LS_DATA, JSON.stringify({ v: 2, saved: Date.now(), topics: cardData }));
+    return true;
+  } catch (err) {
+    console.warn("Save failed:", err);
+    showToast("Couldn't save your cards. Your phone's storage may be full", 4500);
+    return false;
   }
-  localStorage.setItem(LS_CARDS, JSON.stringify(delta));
+}
+
+function hasTopic(name) {
+  return Object.prototype.hasOwnProperty.call(cardData, name);
 }
 
 /* ============================================================
@@ -1888,55 +1927,38 @@ function generateCardsForTopic(topicName, existing = []) {
   const existSet = new Set(existing.map(c => c.en.toLowerCase()));
 
   // Match against known banks using keyword detection
+  const T = topicName;
   let bank = null;
-  if (/film|movie|cinema|cine|pelicula|películas?/i.test(topicName))    bank = VOCAB_BANKS.films;
-  else if (/food|comida|eat|restaurant|cocina|cook/i.test(topicName))   bank = VOCAB_BANKS.food;
-  else if (/travel|viaj|trip|tour|airport|vuelo/i.test(topicName))      bank = VOCAB_BANKS.travel;
-  else if (/business|negocio|work|empresa|office/i.test(topicName))     bank = VOCAB_BANKS.business;
-  else if (/sport|futbol|fútbol|soccer|gym|fitness/i.test(topicName))   bank = VOCAB_BANKS.sports;
-  else if (/tech|tecnolog|digital|computer|software|app|AI/i.test(topicName)) bank = VOCAB_BANKS.technology;
-  else if (/real.?estate|inmobili|propert|house|apartment/i.test(topicName)) bank = VOCAB_BANKS.realestate;
-  else if (/financ|money|bank|invest|dinero|crypto|forex/i.test(topicName)) bank = VOCAB_BANKS.finance;
-  else if (/health|salud|medic|doctor|hospital|fitness/i.test(topicName)) bank = VOCAB_BANKS.health;
-  else if (/educat|school|university|learn|study|class/i.test(topicName)) bank = VOCAB_BANKS.education;
-  else if (/animal|pet|mascotas?|zoo|fauna|bird|dog|cat|horse/i.test(topicName))  bank = VOCAB_BANKS.animals;
-  else if (/colou?r|color|colour|rojo|azul|verde|amarillo/i.test(topicName))       bank = VOCAB_BANKS.colors;
-  else if (/number|numero|n\u00famero|contar|count|digit/i.test(topicName))        bank = VOCAB_BANKS.numbers;
-  else if (/famil|parent|mother|father|sibling|hermano|madre|padre/i.test(topicName)) bank = VOCAB_BANKS.family;
-  else if (/weather|clima|tiempo|lluvia|rain|sun|wind|temperatura/i.test(topicName)) bank = VOCAB_BANKS.weather;
-  else if (/cloth|ropa|fashion|moda|shirt|shoe|dress|vestir/i.test(topicName))    bank = VOCAB_BANKS.clothing;
-  else if (/body|cuerpo|anatomy|organ|cabeza|hand|mano|pie|face/i.test(topicName)) bank = VOCAB_BANKS.body;
-  else if (/home|casa|house|room|furniture|mueble|cuarto|bedroom/i.test(topicName)) bank = VOCAB_BANKS.home;
-  else if (/nature|naturaleza|forest|bosque|mountain|monta\u00f1a|river|ocean/i.test(topicName)) bank = VOCAB_BANKS.nature;
-  else if (/emotion|feeling|sentimiento|happy|feliz|sad|triste|angry/i.test(topicName)) bank = VOCAB_BANKS.emotions;
-  else if (/time|tiempo|clock|hour|hora|minute|day|d\u00eda|week|semana/i.test(topicName)) bank = VOCAB_BANKS.time;
-  else if (/verb|action|accion|acci\u00f3n|conjugat/i.test(topicName))              bank = VOCAB_BANKS.verbs;
-  else if (/greet|saludar|hola|saludo|hello|bye/i.test(topicName))                 bank = VOCAB_BANKS.greetings;
+  if (/film|movie|cinema|\bcine\b|pel[ií]cula/i.test(T))                                  bank = VOCAB_BANKS.films;
+  else if (/food|comida|\beat(ing)?\b|restaurant|cocina|cook/i.test(T))                   bank = VOCAB_BANKS.food;
+  else if (/travel|viaj|\btrips?\b|\btour|airport|vuelo|vacation|holiday/i.test(T))       bank = VOCAB_BANKS.travel;
+  else if (/business|negocio|\bwork\b|empresa|\boffice\b/i.test(T))                       bank = VOCAB_BANKS.business;
+  else if (/sport|f[uú]tbol|soccer|\bgym\b|fitness/i.test(T))                             bank = VOCAB_BANKS.sports;
+  else if (/\btech|tecnolog|digital|computer|software|\bapps?\b|\bAI\b/i.test(T))         bank = VOCAB_BANKS.technology;
+  else if (/real.?estate|inmobili|propert|apartment/i.test(T))                            bank = VOCAB_BANKS.realestate;
+  else if (/financ|money|\bbank|invest|dinero|crypto|forex/i.test(T))                     bank = VOCAB_BANKS.finance;
+  else if (/health|salud|medic|doctor|hospital/i.test(T))                                 bank = VOCAB_BANKS.health;
+  else if (/educat|school|universit|\blearn|\bstudy\b|\bclass(es|room)?\b/i.test(T))      bank = VOCAB_BANKS.education;
+  else if (/animal|\bpets?\b|mascota|\bzoo\b|fauna|\bbirds?\b|\bdogs?\b|\bcats?\b|\bhorses?\b/i.test(T)) bank = VOCAB_BANKS.animals;
+  else if (/colou?rs?\b|\brojo|\bazul|\bverde|amarillo/i.test(T))                         bank = VOCAB_BANKS.colors;
+  else if (/number|n[uú]mero|\bcount(ing)?\b|digit/i.test(T))                             bank = VOCAB_BANKS.numbers;
+  else if (/famil|parent|mother|father|sibling|hermano|madre|padre/i.test(T))             bank = VOCAB_BANKS.family;
+  else if (/weather|clima|lluvia|\brain|\bwind|temperatur/i.test(T))                      bank = VOCAB_BANKS.weather;
+  else if (/cloth|\bropa\b|fashion|\bmoda\b|shirt|shoe|dress|vestir/i.test(T))            bank = VOCAB_BANKS.clothing;
+  else if (/\bbody\b|cuerpo|anatomy|\borgans?\b|cabeza/i.test(T))                         bank = VOCAB_BANKS.body;
+  else if (/\bhome\b|\bcasa\b|\bhouse\b|\brooms?\b|furniture|mueble|cuarto|bedroom/i.test(T)) bank = VOCAB_BANKS.home;
+  else if (/nature|naturaleza|forest|bosque|mountain|monta[ñn]a|river|ocean/i.test(T))    bank = VOCAB_BANKS.nature;
+  else if (/emotion|feeling|sentimiento|\bhappy\b|feliz|\bsad\b|triste|angry/i.test(T))   bank = VOCAB_BANKS.emotions;
+  else if (/\btime\b|tiempo|clock|\bhours?\b|\bhora|minute|\bdays?\b|\bweeks?\b|semana/i.test(T)) bank = VOCAB_BANKS.time;
+  else if (/\bverbs?\b|\bactions?\b|acci[oó]n|conjugat/i.test(T))                         bank = VOCAB_BANKS.verbs;
+  else if (/greet|saludar|\bhola\b|saludo|hello|\bbye\b/i.test(T))                        bank = VOCAB_BANKS.greetings;
 
-  // If no bank matched, combine all banks and pick relevant words
-  if (!bank) {
-    // Use a broad mix as fallback from ALL banks
-    bank = [
-      ...VOCAB_BANKS.films.slice(0,2),
-      ...VOCAB_BANKS.food.slice(0,2),
-      ...VOCAB_BANKS.travel.slice(0,2),
-      ...VOCAB_BANKS.business.slice(0,2),
-      ...VOCAB_BANKS.technology.slice(0,2),
-      ...VOCAB_BANKS.animals.slice(0,2),
-      ...VOCAB_BANKS.colors.slice(0,2),
-      ...VOCAB_BANKS.numbers.slice(0,2),
-      ...VOCAB_BANKS.family.slice(0,2),
-      ...VOCAB_BANKS.weather.slice(0,2),
-      ...VOCAB_BANKS.body.slice(0,2),
-      ...VOCAB_BANKS.home.slice(0,2),
-      ...VOCAB_BANKS.nature.slice(0,2),
-      ...VOCAB_BANKS.emotions.slice(0,2),
-      ...VOCAB_BANKS.verbs.slice(0,2),
-    ];
-  }
+  // No built-in list for this topic — never fill it with unrelated words
+  if (!bank) return [];
 
   // Filter duplicates and pick 20
-  const filtered = bank.filter(c => !existSet.has(c.en.toLowerCase()));
+  const existEs = new Set(existing.map(c => c.es.toLowerCase()));
+  const filtered = bank.filter(c => !existSet.has(c.en.toLowerCase()) && !existEs.has(c.es.toLowerCase()));
   // Shuffle for variety
   for (let i = filtered.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -2040,19 +2062,34 @@ function renderCard() {
   const cards = cardData[currentTopic] || [];
   if (!cards.length) {
     document.getElementById("frontBadge").textContent = currentTopic ? topicLabel(currentTopic) : "—";
-    document.getElementById("frontWord").textContent  = "No cards yet";
-    document.getElementById("frontSub").textContent   = "Use Auto Add or Manual Add below";
+    document.getElementById("backBadge").textContent  = currentTopic ? topicLabel(currentTopic) : "—";
+    document.getElementById("frontWord").textContent  = currentTopic ? "No cards yet" : "No topics yet";
+    document.getElementById("frontSub").textContent   = "";
     document.getElementById("backWord").textContent   = "";
     document.getElementById("exampleText").textContent = "";
+    document.getElementById("exampleSentence").classList.remove("visible");
+    document.getElementById("exampleTranslation").classList.remove("visible");
+    document.getElementById("exampleTranslation").textContent = "";
+    document.getElementById("tapHint").textContent = "";
+    document.getElementById("sentenceBackBtn").style.display  = "none";
+    document.getElementById("sentenceFrontBtn").style.display = "none";
     document.getElementById("progressFill").style.width = "0%";
     document.getElementById("cardCount").textContent = "0 / 0";
+    setCardControlsEnabled(false);
+    isFlipped = false;
+    document.getElementById("flashcard").classList.remove("flipped");
     return;
   }
+
+  // Keep order/index valid if cards changed underneath us
+  if (cardOrder.length !== cards.length || cardOrder.some(i => i >= cards.length)) cardOrder = cards.map((_, i) => i);
+  if (cardIndex < 0 || cardIndex >= cardOrder.length) cardIndex = 0;
+  setCardControlsEnabled(true);
 
   const card  = cards[cardOrder[cardIndex]];
   const front = displayMode === "en" ? card.en : card.es;
   const back  = displayMode === "en" ? card.es : card.en;
-  const frontSub = displayMode === "es" ? "" : "";
+  const frontSub = "";
 
   document.getElementById("frontBadge").textContent  = topicLabel(currentTopic);
   document.getElementById("backBadge").textContent   = topicLabel(currentTopic);
@@ -2066,7 +2103,8 @@ function renderCard() {
   document.getElementById("exampleSentence").classList.remove("visible");
   document.getElementById("exampleTranslation").classList.remove("visible");
   document.getElementById("exampleTranslation").textContent = "";
-  document.getElementById("tapHint").style.display = card.example ? "" : "none";
+  document.getElementById("exampleTranslation").dataset.cached = "";
+  document.getElementById("tapHint").textContent = "";
 
   // Sentence button: show only on the Spanish face
   // en mode → Spanish is on the BACK face
@@ -2083,6 +2121,14 @@ function renderCard() {
   document.getElementById("cardCount").textContent    = `${cardIndex + 1} / ${cards.length}`;
 
   if (!isFlipped) document.getElementById("flashcard").classList.remove("flipped");
+}
+
+function setCardControlsEnabled(on) {
+  ["cardDeleteBtn", "audioBtn", "focusBtn"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = on ? "" : "none";
+  });
+  ["prevBtn", "nextBtn", "shuffleBtn"].forEach(id => { document.getElementById(id).disabled = !on; });
 }
 
 function showToast(msg, duration = 2200) {
@@ -2119,48 +2165,46 @@ function toggleExampleSentence(e) {
   document.getElementById("sentenceFrontBtn").textContent = label;
   if (!visible) {
     document.getElementById("exampleTranslation").classList.remove("visible");
-    document.getElementById("exampleTranslation").textContent = "";
-    document.getElementById("tapHint").style.display = "";
+    document.getElementById("tapHint").textContent = "";
   }
 }
 document.getElementById("sentenceBackBtn").addEventListener("click", toggleExampleSentence);
 document.getElementById("sentenceFrontBtn").addEventListener("click", toggleExampleSentence);
 
-// TAP EXAMPLE SENTENCE → toggle English translation
-document.getElementById("exampleSentence").addEventListener("click", async (e) => {
-  e.stopPropagation();
-  const translEl = document.getElementById("exampleTranslation");
-  const tapHint  = document.getElementById("tapHint");
-  const card     = cardData[currentTopic]?.[cardOrder[cardIndex]];
+// TAP EXAMPLE SENTENCE → toggle English translation (shared by main view + focus mode)
+async function handleSentenceTap(card, translEl, hintEl) {
   if (!card?.example) return;
-
-  // Toggle: if translation is already showing, hide it
-  if (translEl.classList.contains("visible")) {
+  if (translEl.classList.contains("visible")) {          // hide if showing
     translEl.classList.remove("visible");
-    tapHint.textContent = "Tap for translation";
-    tapHint.style.display = "";
+    hintEl.textContent = "";
     return;
   }
-
-  // If we already have a cached translation, show it immediately
-  if (translEl.dataset.cached === card.example) {
+  if (translEl.dataset.cached === card.example && translEl.textContent) {
     translEl.classList.add("visible");
-    tapHint.style.display = "none";
+    hintEl.textContent = "";
     return;
   }
-
-  // Show loading state
-  tapHint.textContent = "Translating…";
-  const result = await translateToEnglish(card.example);
+  if (translEl.dataset.loading === "1") return;           // ignore double taps
+  translEl.dataset.loading = "1";
+  hintEl.textContent = "Translating…";
+  const sentence = card.example;
+  const result = await translateToEnglish(sentence);
+  translEl.dataset.loading = "";
+  const now = getCurrentCard();
+  if (!now || now.example !== sentence) { hintEl.textContent = ""; return; } // user moved on
   if (result) {
-    translEl.textContent     = "" + result;
-    translEl.dataset.cached  = card.example;
+    translEl.textContent    = result;
+    translEl.dataset.cached = sentence;
     translEl.classList.add("visible");
-    tapHint.style.display = "none";
+    hintEl.textContent = "";
   } else {
-    // Fallback: show English word as reference
-    tapHint.textContent = "Translation unavailable offline";
+    hintEl.textContent = "Translation unavailable. Check your connection";
   }
+}
+
+document.getElementById("exampleSentence").addEventListener("click", (e) => {
+  e.stopPropagation();
+  handleSentenceTap(getCurrentCard(), document.getElementById("exampleTranslation"), document.getElementById("tapHint"));
 });
 
 // Next / Prev
@@ -2183,7 +2227,9 @@ document.getElementById("prevBtn").addEventListener("click", () => {
   renderCard();
 });
 document.addEventListener("keydown", e => {
-  if (document.activeElement.tagName === "INPUT") return;
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  if (!document.getElementById("apiKeyModal").classList.contains("hidden")) return;
+  if (document.getElementById("focusOverlay").classList.contains("active")) return;
   if (e.key === "ArrowRight") document.getElementById("nextBtn").click();
   if (e.key === "ArrowLeft")  document.getElementById("prevBtn").click();
 });
@@ -2231,29 +2277,43 @@ document.getElementById("dialectSelect").addEventListener("change", e => {
 });
 
 /* ─── ADD NEW TOPIC + AUTO-GENERATE CARDS ─── */
-document.getElementById("addTopicBtn").addEventListener("click", () => {
+function addTopicFromInput() {
+  if (isGenerating) { showToast("Still generating cards — one moment"); return; }
   const input = document.getElementById("newTopicInput");
-  const name  = input.value.trim().toLowerCase();
+  const name  = input.value.replace(/\s+/g, " ").trim().toLowerCase();
   if (!name) { showToast("Enter a topic name first"); return; }
-  if (cardData[name]) { showToast(`"${topicLabel(name)}" already exists`); return; }
+  if (name.length > 40) { showToast("Topic name is too long (40 characters max)"); return; }
+  const clash = Object.keys(cardData).find(k => k === name || topicLabel(k).toLowerCase() === name);
+  if (clash) { showToast(`"${topicLabel(clash)}" already exists`); return; }
 
   cardData[name] = [];
+  saveUserCards();
   currentTopic   = name;
   localStorage.setItem(LS_TOPIC, currentTopic);
   renderTopicSelects();
+  resetOrder();
+  renderCard();
   input.value = "";
+  input.blur();
 
   // Auto-generate cards for this new topic
   triggerAutoGenerate(name, true);
+}
+document.getElementById("addTopicBtn").addEventListener("click", addTopicFromInput);
+document.getElementById("newTopicInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); addTopicFromInput(); }
 });
 
 /* ─── DELETE INDIVIDUAL CARD ─── */
 document.getElementById("cardDeleteBtn").addEventListener("click", () => {
   const cards = cardData[currentTopic];
   if (!cards || !cards.length) return;
+  if (isGenerating) return;
   const realIndex = cardOrder[cardIndex];
   const card = cards[realIndex];
-  if (!confirm(`Delete "${card.en}"?`)) return;
+  if (!card) return;
+  if (!confirm(`Delete "${card.es}" / "${card.en}"?`)) return;
+  stopSpeech();
 
   // Remove card from data
   cardData[currentTopic].splice(realIndex, 1);
@@ -2283,33 +2343,20 @@ document.getElementById("cardDeleteBtn").addEventListener("click", () => {
 
 /* ─── DELETE TOPIC ─── */
 document.getElementById("deleteTopicBtn").addEventListener("click", () => {
-  if (!currentTopic) { showToast("No topic selected"); return; }
+  if (isGenerating) { showToast("Still generating cards — one moment"); return; }
+  if (!currentTopic || !hasTopic(currentTopic)) { showToast("No topic selected"); return; }
   const label = topicLabel(currentTopic);
-  const isStarter = !!STARTER_DATA[currentTopic];
-  const confirmMsg = isStarter
-    ? `Delete "${label}"?\n\nThis is a built-in topic — your added cards will be lost but the original cards will return on next load.`
-    : `Delete "${label}"?\n\nAll ${cardData[currentTopic].length} card(s) will be permanently removed.`;
-  if (!confirm(confirmMsg)) return;
+  const n = cardData[currentTopic].length;
+  if (!confirm(`Delete "${label}"?\n\nIts ${n} card${n !== 1 ? "s" : ""} will be permanently removed.`)) return;
 
-  // Remove from cardData
+  stopSpeech();
   delete cardData[currentTopic];
+  saveUserCards();
 
-  // Remove from localStorage delta
-  const stored = JSON.parse(localStorage.getItem(LS_CARDS) || "{}");
-  delete stored[currentTopic];
-  localStorage.setItem(LS_CARDS, JSON.stringify(stored));
-
-  // If it was a starter topic, re-seed it from STARTER_DATA so it comes back
-  if (isStarter) {
-    cardData[currentTopic] = [...STARTER_DATA[currentTopic]];
-    showToast(`"${label}" reset to original cards`);
-  } else {
-    // Switch to first remaining topic
-    const remaining = Object.keys(cardData);
-    currentTopic = remaining[0] || "";
-    localStorage.setItem(LS_TOPIC, currentTopic);
-    showToast(`"${label}" deleted`);
-  }
+  const remaining = Object.keys(cardData).sort();
+  currentTopic = remaining[0] || "";
+  localStorage.setItem(LS_TOPIC, currentTopic);
+  showToast(`"${label}" deleted`);
 
   renderTopicSelects();
   resetOrder();
@@ -2348,7 +2395,7 @@ function updateApiKeyUI() {
     icon.style.color = "var(--accent)";
   } else {
     statusEl.classList.remove("has-key");
-    statusText.textContent = "No key saved — using local vocab banks";
+    statusText.textContent = "No key saved";
     icon.style.color = "";
   }
 }
@@ -2364,6 +2411,12 @@ document.getElementById("apiKeyBtn").addEventListener("click", () => {
   if (!key) input.focus();
 });
 
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") document.getElementById("apiKeyModal").classList.add("hidden");
+});
+document.getElementById("apiKeyInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); document.getElementById("apiKeySave").click(); }
+});
 document.getElementById("apiKeyModal").addEventListener("click", (e) => {
   if (e.target === e.currentTarget) e.currentTarget.classList.add("hidden");
 });
@@ -2374,6 +2427,10 @@ document.getElementById("apiKeySave").addEventListener("click", () => {
   if (/^sk-/i.test(val)) { showToast("That looks like an OpenAI key. This app needs a Perplexity key starting with pplx-", 4500); return; }
   if (!val || val.startsWith("•")) {
     showToast("Enter a valid API key");
+    return;
+  }
+  if (!/^pplx-[A-Za-z0-9]+$/.test(val)) {
+    showToast("That doesn't look like a Perplexity key. It should start with pplx-", 4500);
     return;
   }
   localStorage.setItem(LS_API_KEY, val);
@@ -2399,6 +2456,15 @@ document.getElementById("apiKeyInput").addEventListener("focus", function() {
 ============================================================ */
 let lastGenError = "";
 
+function describeFetchError(err) {
+  if (err && err.name === "AbortError") return "Perplexity took too long to reply. Check your connection and try again";
+  const m = String((err && err.message) || err || "");
+  if (/load failed|failed to fetch|networkerror|network connection/i.test(m))
+    return "Couldn't reach Perplexity. Check your connection, VPN, Private Relay or content blockers";
+  return `AI error: ${m}`;
+}
+
+
 function normWord(w) {
   return String(w || "").toLowerCase().trim()
     .replace(/^(el|la|los|las|un|una|unos|unas|the|a|an|to)\s+/i, "")
@@ -2406,110 +2472,184 @@ function normWord(w) {
     .replace(/[^a-z0-9ñ ]/g, "").trim();
 }
 
+/* Perplexity Agent API (replaces the retired Sonar chat-completions endpoint) */
+const AI_ENDPOINT = "https://api.perplexity.ai/v1/agent";
+const AI_MODELS   = ["openai/gpt-6-luna", "anthropic/claude-haiku-5-5", "google/gemini-3.8-flash"];
+const CARD_SCHEMA = {
+  type: "object",
+  properties: {
+    cards: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: { en: { type: "string" }, es: { type: "string" }, example: { type: "string" } },
+        required: ["en", "es", "example"],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ["cards"],
+  additionalProperties: false,
+};
+let lastGenNote = "";
+
+function extractAgentText(data) {
+  if (typeof data?.output_text === "string" && data.output_text.trim()) return data.output_text;
+  const parts = [];
+  for (const item of (Array.isArray(data?.output) ? data.output : [])) {
+    if (item && item.type === "message" && Array.isArray(item.content)) {
+      for (const c of item.content) if (c && typeof c.text === "string") parts.push(c.text);
+    }
+  }
+  if (parts.length) return parts.join("");
+  return data?.choices?.[0]?.message?.content || "";
+}
+
+function parseCardsJSON(raw) {
+  const txt = String(raw || "").replace(/```(?:json)?\s*/gi, "").replace(/```/g, "").trim();
+  try {
+    const j = JSON.parse(txt);
+    if (Array.isArray(j)) return j;
+    if (j && Array.isArray(j.cards)) return j.cards;
+  } catch {}
+  const s0 = txt.indexOf("["), s1 = txt.lastIndexOf("]");
+  if (s0 !== -1 && s1 > s0) {
+    try { const arr = JSON.parse(txt.slice(s0, s1 + 1).replace(/\[\d+\]/g, "")); if (Array.isArray(arr)) return arr; } catch {}
+  }
+  throw new Error("Couldn't read the AI's reply");
+}
+
+/** One request to Perplexity. Resolves {status, data} or throws on network/timeout. */
+async function callPerplexity(apiKey, instructions, input, timeoutMs = 75000) {
+  const ctrl  = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(AI_ENDPOINT, {
+      method: "POST",
+      signal: ctrl.signal,
+      headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        models: AI_MODELS,
+        instructions,
+        input,
+        max_output_tokens: 6000,
+        response_format: { type: "json_schema", json_schema: { name: "flashcards", schema: CARD_SCHEMA } },
+      }),
+    });
+    let data = null;
+    try { data = await res.json(); } catch { data = null; }
+    return { status: res.status, ok: res.ok, data };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function describeHttpError(status, data) {
+  let msg = data?.error?.message || data?.detail || data?.message || "";
+  if (typeof msg !== "string") msg = JSON.stringify(msg);
+  const low = msg.toLowerCase();
+  if (status === 401) return "API key not accepted. Generate a new key and paste it in again";
+  if (status === 402 || /credit|quota|balance|billing|payment|insufficient/.test(low)) return "Your Perplexity API credit has run out. Top up in the API Console (Billing tab)";
+  if (status === 429) return "Too many requests. Wait a minute and try again";
+  if (status === 403) return "This API key doesn't have access. Check it in the API Console";
+  return `AI error (${status})${msg ? ": " + msg.slice(0, 140) : ""}`;
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 async function generateCardsViaAI(topic, existing) {
   lastGenError = "";
+  lastGenNote  = "";
   const apiKey = getApiKey();
   if (!apiKey) {
-    const local = generateCardsForTopic(topic, existing);
-    if (!local.length) lastGenError = "Add your API key (key icon, top right) to auto-add more cards";
-    return local;
+    const local = generateCardsForTopic(topicLabel(topic), existing);
+    if (local.length) { lastGenNote = "from the built-in word list"; return local; }
+    lastGenError = "Add your Perplexity API key (key icon, top right) to auto-add cards for this topic";
+    return [];
+  }
+  if (!/^pplx-/i.test(apiKey)) {
+    lastGenError = "Saved key isn't a Perplexity key (should start with pplx-). Tap the key icon to replace it";
+    return [];
   }
 
   const topicName = topicLabel(topic);
   const dialectNote = {
-    "Colombia":  "Use Colombian Spanish (standard Latin American, natural Bogotá/Medellín register).",
-    "Mexico":    "Use Mexican Spanish vocabulary and expressions.",
-    "Spain":     "Use Castilian Spanish (vosotros, leismo, ceceo).",
-    "Argentina": "Use Rioplatense Spanish (vos, lunfardo occasionally).",
-    "Peru":      "Use Peruvian Spanish, standard and clear.",
-    "Chile":     "Use Chilean Spanish.",
-    "Universal": "Use neutral, universal Spanish understood across all regions.",
-  }[dialect] || "Use neutral Latin American Spanish.";
+    "Colombia":  "Colombian Spanish (natural Bogotá/Medellín usage)",
+    "Mexico":    "Mexican Spanish",
+    "Spain":     "Castilian Spanish from Spain",
+    "Argentina": "Rioplatense Spanish from Argentina (use vos)",
+    "Peru":      "Peruvian Spanish",
+    "Chile":     "Chilean Spanish",
+    "Universal": "neutral Spanish understood in every Spanish-speaking country",
+  }[dialect] || "neutral Latin American Spanish";
+
+  const instructions = "You are an expert Spanish teacher writing vocabulary flashcards for an adult English speaker. " +
+    "Every card must be clearly and specifically about the requested topic. Spanish must be correct, natural and in the requested dialect. " +
+    "English must be an accurate translation of the Spanish. Reply only with the JSON object described by the schema.";
 
   // Track every word already in the topic (both languages) so nothing repeats
   const seenEn = new Set(existing.map(c => normWord(c.en)));
   const seenEs = new Set(existing.map(c => normWord(c.es)));
   const collected = [];
   const TARGET = 20;
-  if (!/^pplx-/i.test(apiKey)) {
-    lastGenError = "Saved key isn't a Perplexity key (should start with pplx-). Tap the key icon to replace it";
-    return [];
-  }
+  let networkFailures = 0;
 
-  for (let attempt = 0; attempt < 3 && collected.length < TARGET; attempt++) {
+  for (let attempt = 0; attempt < 4 && collected.length < TARGET; attempt++) {
     const avoid = [...existing, ...collected].map(c => c.es).join(", ") || "none";
-    const need = TARGET - collected.length;
-    const prompt = `You are a Spanish language teacher creating flashcards for an adult English speaker.
-
-Topic: "${topicName}"
+    const need  = TARGET - collected.length;
+    const input =
+`Topic: "${topicName}"
 Dialect: ${dialectNote}
 
-The learner ALREADY HAS these words — do NOT use any of them, or close variants of them:
+Create ${need + 6} NEW flashcards for the topic "${topicName}".
+Mix useful nouns, verbs, adjectives and short everyday phrases that a person really uses when talking about "${topicName}". Go beyond the most obvious basics.
+
+Do NOT include any of these (the learner already has them), or close variants:
 ${avoid}
 
-Generate ${need + 10} NEW Spanish vocabulary flashcards for the topic "${topicName}".
-Go beyond the most obvious basics: include less common nouns, useful verbs, adjectives and everyday phrases related to this topic.
+For each card:
+- "es": the Spanish word or phrase (include el/la/los/las for nouns, e.g. "la regadera")
+- "en": the English meaning
+- "example": one natural Spanish sentence of 8–16 words that uses the Spanish word`;
 
-Return ONLY a valid JSON array — no markdown, no explanation, no code fences.
-Each object must have exactly:
-- "en": English word or short phrase
-- "es": Spanish translation (with article if a noun, e.g. "el perro")
-- "example": a natural Spanish sentence using the word (10-20 words)
-
-[
-  {"en": "example", "es": "el ejemplo", "example": "Este es un ejemplo de una oración natural en español."}
-]`;
-
+    let resp;
     try {
-      const res = await fetch("https://api.perplexity.ai/chat/completions", {
-        method: "POST",
-        headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "sonar",
-          messages: [
-            { role: "system", content: "You are a Spanish language teacher. Respond ONLY with a raw JSON array. No markdown. No code fences. No explanation. No citations. Just the JSON array starting with [ and ending with ]." },
-            { role: "user", content: prompt }
-          ],
-          temperature: 0.7,
-          max_tokens: 5000,
-        }),
-      });
-
-      if (!res.ok) {
-        let apiMsg = "";
-        try { const j = await res.json(); apiMsg = j?.error?.message || j?.detail || j?.message || ""; } catch {}
-        if (typeof apiMsg !== "string") apiMsg = JSON.stringify(apiMsg);
-        const low = apiMsg.toLowerCase();
-        if (res.status === 401) lastGenError = "API key not accepted. Generate a new key and paste it in again";
-        else if (res.status === 402 || /credit|quota|balance|billing|payment|insufficient/.test(low)) lastGenError = "Your Perplexity API credit has run out. Top up in the API Console (Billing tab)";
-        else if (res.status === 429) lastGenError = "Too many requests. Wait a minute and try again";
-        else if (res.status === 403) lastGenError = "This API key doesn't have access. Check it in the API Console";
-        else lastGenError = `AI error (${res.status})${apiMsg ? ": " + apiMsg.slice(0, 140) : ""}`;
-        break;
-      }
-
-      const data = await res.json();
-      let raw = (data.choices?.[0]?.message?.content || "").trim();
-      raw = raw.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "");
-      const s0 = raw.indexOf("["), s1 = raw.lastIndexOf("]");
-      if (s0 === -1 || s1 === -1) throw new Error("No JSON array in response");
-      const parsed = JSON.parse(raw.slice(s0, s1 + 1).replace(/\[\d+\]/g, ""));
-
-      for (const c of parsed) {
-        if (!c || !c.en || !c.es) continue;
-        const ne = normWord(c.en), ns = normWord(c.es);
-        if (!ne || !ns || seenEn.has(ne) || seenEs.has(ns)) continue;
-        seenEn.add(ne); seenEs.add(ns);
-        collected.push({ en: String(c.en).trim(), es: String(c.es).trim(), example: String(c.example || "").trim() });
-        if (collected.length >= TARGET) break;
-      }
+      resp = await callPerplexity(apiKey, instructions, input);
     } catch (err) {
-      console.warn("AI generation error:", err);
-      lastGenError = `AI error: ${err.message}`;
+      console.warn("AI request failed:", err);
+      lastGenError = describeFetchError(err);
+      if (err && err.name === "AbortError") break;
+      if (++networkFailures >= 2) break;
+      await sleep(1500);
+      continue;
+    }
+
+    if (!resp.ok) { lastGenError = describeHttpError(resp.status, resp.data); break; }
+
+    let parsed;
+    try { parsed = parseCardsJSON(extractAgentText(resp.data)); }
+    catch (err) { console.warn(err, resp.data); lastGenError = "The AI's reply couldn't be read. Try again"; continue; }
+
+    for (const c of parsed) {
+      if (!c || !c.en || !c.es) continue;
+      const en = String(c.en).trim(), es = String(c.es).trim(), ex = String(c.example || "").trim();
+      const ne = normWord(en), ns = normWord(es);
+      if (!ne || !ns || seenEn.has(ne) || seenEs.has(ns)) continue;
+      if (es.length > 80 || en.length > 80) continue;
+      seenEn.add(ne); seenEs.add(ns);
+      collected.push({ en, es, example: ex });
+      if (collected.length >= TARGET) break;
     }
   }
 
-  if (collected.length) return collected;
+  if (collected.length) { lastGenError = ""; return collected; }
+
+  // AI unreachable: fall back to the built-in list only if it genuinely matches this topic
+  const local = generateCardsForTopic(topicName, existing);
+  if (local.length && /reach|too long/i.test(lastGenError)) {
+    lastGenNote = "from the built-in word list (Perplexity couldn't be reached)";
+    return local;
+  }
   if (!lastGenError) lastGenError = "The AI only returned words you already have — try again";
   return [];
 }
@@ -2527,20 +2667,27 @@ async function triggerAutoGenerate(topic, isNewTopic) {
   const label = topicLabel(topic);
   setAILoading(true,
     isNewTopic ? `Creating cards for "${label}"…` : `Adding more cards to "${label}"…`,
-    "AI is generating 20 flashcards — just a moment"
+    "This can take up to a minute"
   );
 
   const existing  = cardData[topic] || [];
-  const newCards  = await generateCardsViaAI(topic, existing);
+  let newCards = [];
+  try { newCards = await generateCardsViaAI(topic, existing); }
+  catch (err) { console.error(err); lastGenError = `Something went wrong: ${err.message}`; newCards = []; }
+  if (!hasTopic(topic)) { setAILoading(false); isGenerating = false; return; } // topic deleted meanwhile
 
   if (!newCards.length) {
     setAILoading(false);
-    showToast(lastGenError || "Couldn't generate new cards — try again", 4500);
+    renderTopicSelects();
+    renderCard();
+    const why = lastGenError || "Couldn't generate cards — try again";
+    showToast(isNewTopic ? `"${label}" was created, but no cards were added. ${why}` : why, 6000);
     isGenerating = false;
     return;
   }
 
-  cardData[topic] = [...existing, ...newCards];
+  const startAt = cardData[topic].length;
+  cardData[topic] = [...cardData[topic], ...newCards];
   saveUserCards();
 
   // Navigate to this topic
@@ -2551,13 +2698,13 @@ async function triggerAutoGenerate(topic, isNewTopic) {
 
   // Jump to first new card
   cardOrder = cardData[topic].map((_, i) => i);
-  cardIndex = existing.length; // start at the first new card
+  cardIndex = startAt; // start at the first new card
   isFlipped = false;
   document.getElementById("flashcard").classList.remove("flipped");
 
   setAILoading(false);
   renderCard();
-  showToast(`Added ${newCards.length} cards to ${label}`, 3000);
+  showToast(`Added ${newCards.length} cards to ${label}${lastGenNote ? " " + lastGenNote : ""}`, lastGenNote ? 4500 : 3000);
   isGenerating = false;
 }
 
@@ -2571,6 +2718,7 @@ document.getElementById("saveCardBtn").addEventListener("click", () => {
   if (!english) { showToast("English field is required"); return; }
   if (!spanish) { showToast("Spanish field is required"); return; }
 
+  if (!hasTopic(topic)) { showToast("Please select a topic"); return; }
   cardData[topic].push({ en: english, es: spanish, example: example || "" });
   saveUserCards();
 
@@ -2761,7 +2909,8 @@ function restoreBackup(text) {
     const valid = list.filter(c => c && c.en && c.es)
       .map(c => ({ en: String(c.en), es: String(c.es), example: String(c.example || "") }));
     if (!valid.length) continue;
-    if (!cardData[key]) cardData[key] = [];
+    if (key === "__proto__" || key === "constructor" || key === "prototype") continue;
+    if (!hasTopic(key)) cardData[key] = [];
     const have = new Set(cardData[key].map(c => (c.en + "|" + c.es).toLowerCase()));
     let n = 0;
     for (const c of valid) {
@@ -2772,6 +2921,8 @@ function restoreBackup(text) {
   }
   if (!added) { showToast("Backup loaded — all cards were already here", 3500); return true; }
   saveUserCards();
+  if (!currentTopic || !hasTopic(currentTopic)) currentTopic = Object.keys(cardData).sort()[0] || "";
+  localStorage.setItem(LS_TOPIC, currentTopic);
   renderTopicSelects();
   resetOrder();
   renderCard();
@@ -2791,6 +2942,8 @@ function setTheme(t) {
   localStorage.setItem(LS_THEME, t);
   document.getElementById("themeIcon").innerHTML  = t === "dark" ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>` : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
   document.getElementById("themeLabel").textContent = t === "dark" ? "Dark" : "Light";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute("content", t === "dark" ? "#000000" : "#f2f3f5");
 }
 
 /* ─── SWIPE (mobile) ─── */
@@ -2951,8 +3104,9 @@ let focusFlipped = false;
 /** Populate the focus card from current state */
 function renderFocusCard() {
   const cards = cardData[currentTopic] || [];
-  if (!cards.length) return;
-  const card  = cards[cardOrder[cardIndex]];
+  if (!cards.length) { exitFocus(); return; }
+  const card  = getCurrentCard();
+  if (!card) { exitFocus(); return; }
   const front = displayMode === "en" ? card.en : card.es;
   const back  = displayMode === "en" ? card.es : card.en;
   const label = topicLabel(currentTopic);
@@ -2962,13 +3116,13 @@ function renderFocusCard() {
   document.getElementById("focusFrontWord").textContent  = front;
   document.getElementById("focusBackWord").textContent   = back;
   document.getElementById("focusExampleText").textContent = card.example || "";
-  document.getElementById("focusTapHint").style.display   = card.example ? "" : "none";
 
   // Reset example + translation
   document.getElementById("focusExampleSentence").classList.remove("visible");
   document.getElementById("focusExampleTranslation").classList.remove("visible");
   document.getElementById("focusExampleTranslation").textContent = "";
-  document.getElementById("focusTapHint").textContent = "Tap for translation";
+  document.getElementById("focusExampleTranslation").dataset.cached = "";
+  document.getElementById("focusTapHint").textContent = "";
 
   // Sentence button visibility
   const hasSentenceF = !!card.example;
@@ -2989,6 +3143,7 @@ function renderFocusCard() {
 
 /** Open focus mode */
 function enterFocus() {
+  if (!getCurrentCard()) return;
   stopSpeech();
   renderFocusCard();
   document.getElementById("focusOverlay").classList.add("active");
@@ -3075,40 +3230,16 @@ function toggleFocusExampleSentence(e) {
   document.getElementById("focusSentenceFrontBtn").textContent = label;
   if (!visible) {
     document.getElementById("focusExampleTranslation").classList.remove("visible");
-    document.getElementById("focusExampleTranslation").textContent = "";
-    document.getElementById("focusTapHint").textContent = "Tap for translation";
+    document.getElementById("focusTapHint").textContent = "";
   }
 }
 document.getElementById("focusSentenceBackBtn").addEventListener("click", toggleFocusExampleSentence);
 document.getElementById("focusSentenceFrontBtn").addEventListener("click", toggleFocusExampleSentence);
 
 // Focus example tap-to-translate
-document.getElementById("focusExampleSentence").addEventListener("click", async (e) => {
+document.getElementById("focusExampleSentence").addEventListener("click", (e) => {
   e.stopPropagation();
-  const translEl = document.getElementById("focusExampleTranslation");
-  const tapHint  = document.getElementById("focusTapHint");
-  const card     = getCurrentCard();
-  if (!card?.example) return;
-  if (translEl.classList.contains("visible")) {
-    translEl.classList.remove("visible");
-    tapHint.textContent = "Tap for translation";
-    return;
-  }
-  if (translEl.dataset.cached === card.example) {
-    translEl.classList.add("visible");
-    tapHint.style.display = "none";
-    return;
-  }
-  tapHint.textContent = "Translating…";
-  const result = await translateToEnglish(card.example);
-  if (result) {
-    translEl.textContent    = "" + result;
-    translEl.dataset.cached = card.example;
-    translEl.classList.add("visible");
-    tapHint.style.display = "none";
-  } else {
-    tapHint.textContent = "Translation unavailable offline";
-  }
+  handleSentenceTap(getCurrentCard(), document.getElementById("focusExampleTranslation"), document.getElementById("focusTapHint"));
 });
 
 // Focus swipe (left = next, right = prev)
@@ -3148,12 +3279,18 @@ document.getElementById("focusCard").addEventListener("touchend", e => {
   document.getElementById("dialectSelect").value = savedDialect;
 
   const topics = Object.keys(cardData);
-  currentTopic = (savedTopic && cardData[savedTopic]) ? savedTopic : (topics[0] || "");
+  currentTopic = (savedTopic && hasTopic(savedTopic)) ? savedTopic : (topics.sort()[0] || "");
+  // Ask the browser to keep this data (helps stop Safari clearing it)
+  try { navigator.storage?.persist?.(); } catch {}
 
   renderTopicSelects();
   document.getElementById("topicSelect").value = currentTopic;
   resetOrder();
   renderCard();
+  // Turn animations back on once the first frame has been drawn (prevents a light-mode flash)
+  const endPreload = () => document.documentElement.classList.remove("preload");
+  requestAnimationFrame(() => requestAnimationFrame(endPreload));
+  setTimeout(endPreload, 120);   // fallback if animation frames are paused
 })();
 </script>
 </body>
