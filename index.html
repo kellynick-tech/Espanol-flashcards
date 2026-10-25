@@ -896,7 +896,7 @@
   <div class="modal-backdrop hidden" id="apiKeyModal">
     <div class="modal-box">
       <h2>AI Card Generation</h2>
-      <p>Enter your API key to enable AI card generation. Get one free at <a href="https://www.perplexity.ai/settings/api" target="_blank" style="color:var(--accent)">perplexity.ai/settings/api</a>.</p>
+      <p>Enter your API key to enable AI card generation. Get one free at <a href="https://console.perplexity.ai/project/keys" target="_blank" style="color:var(--accent)">console.perplexity.ai</a>.</p>
       <input type="password" id="apiKeyInput" placeholder="pplx-…" autocomplete="off" spellcheck="false" />
       <div class="api-key-status" id="apiKeyStatus">
         <span class="key-dot"></span><span id="apiKeyStatusText">No key saved</span>
@@ -2334,7 +2334,7 @@ document.getElementById("autoAddBtn").addEventListener("click", () => {
 const LS_API_KEY = "esfc_pplx_key";
 
 function getApiKey() {
-  return localStorage.getItem(LS_API_KEY) || "";
+  return (localStorage.getItem(LS_API_KEY) || "").replace(/[\s\u200B-\u200D\uFEFF]/g, "");
 }
 
 function updateApiKeyUI() {
@@ -2369,7 +2369,9 @@ document.getElementById("apiKeyModal").addEventListener("click", (e) => {
 });
 
 document.getElementById("apiKeySave").addEventListener("click", () => {
-  const val = document.getElementById("apiKeyInput").value.trim();
+  const val = document.getElementById("apiKeyInput").value.replace(/[\s\u200B-\u200D\uFEFF]/g, "");
+  if (/^sk-ant-/i.test(val)) { showToast("That's a Claude key. This app needs a Perplexity key starting with pplx-", 4500); return; }
+  if (/^sk-/i.test(val)) { showToast("That looks like an OpenAI key. This app needs a Perplexity key starting with pplx-", 4500); return; }
   if (!val || val.startsWith("•")) {
     showToast("Enter a valid API key");
     return;
@@ -2429,6 +2431,10 @@ async function generateCardsViaAI(topic, existing) {
   const seenEs = new Set(existing.map(c => normWord(c.es)));
   const collected = [];
   const TARGET = 20;
+  if (!/^pplx-/i.test(apiKey)) {
+    lastGenError = "Saved key isn't a Perplexity key (should start with pplx-). Tap the key icon to replace it";
+    return [];
+  }
 
   for (let attempt = 0; attempt < 3 && collected.length < TARGET; attempt++) {
     const avoid = [...existing, ...collected].map(c => c.es).join(", ") || "none";
@@ -2469,8 +2475,18 @@ Each object must have exactly:
         }),
       });
 
-      if (res.status === 401) { lastGenError = "Invalid API key — check it in the key settings"; break; }
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        let apiMsg = "";
+        try { const j = await res.json(); apiMsg = j?.error?.message || j?.detail || j?.message || ""; } catch {}
+        if (typeof apiMsg !== "string") apiMsg = JSON.stringify(apiMsg);
+        const low = apiMsg.toLowerCase();
+        if (res.status === 401) lastGenError = "API key not accepted. Generate a new key and paste it in again";
+        else if (res.status === 402 || /credit|quota|balance|billing|payment|insufficient/.test(low)) lastGenError = "Your Perplexity API credit has run out. Top up in the API Console (Billing tab)";
+        else if (res.status === 429) lastGenError = "Too many requests. Wait a minute and try again";
+        else if (res.status === 403) lastGenError = "This API key doesn't have access. Check it in the API Console";
+        else lastGenError = `AI error (${res.status})${apiMsg ? ": " + apiMsg.slice(0, 140) : ""}`;
+        break;
+      }
 
       const data = await res.json();
       let raw = (data.choices?.[0]?.message?.content || "").trim();
