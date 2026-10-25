@@ -9,21 +9,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <style>
+    .nav-row > * { min-width: 0; }
+    .nav-row .btn-icon { flex-shrink: 0; }
     /* ── DESIGN TOKENS ── */
     :root {
-      --bg:          #f5f4f0;
+      --bg:          #f2f3f5;
       --surface:     #ffffff;
-      --surface-2:   #f0efe9;
-      --border:      #e2e0d8;
-      --text-1:      #1a1917;
-      --text-2:      #6b6963;
-      --text-3:      #9e9b94;
-      --accent:      #d97706;
-      --accent-soft: #fef3c7;
-      --accent-text: #92400e;
-      --success:     #059669;
-      --danger:      #dc2626;
-      --info:        #0ea5e9;
+      --surface-2:   #e9ebee;
+      --border:      #d6d9de;
+      --text-1:      #16181b;
+      --text-2:      #5c6066;
+      --text-3:      #9095a0;
+      --accent:      #4682b4;
+      --accent-soft: #e4edf5;
+      --accent-text: #2e5c82;
+      --success:     #4682b4;
+      --danger:      #5c6066;
+      --info:        #4682b4;
       --card-radius: 20px;
       --card-shadow:    0 4px 24px rgba(0,0,0,.08), 0 1px 4px rgba(0,0,0,.04);
       --card-shadow-lg: 0 12px 40px rgba(0,0,0,.14), 0 2px 8px rgba(0,0,0,.06);
@@ -33,18 +35,18 @@
     }
     [data-theme="dark"] {
       --bg:          #000000;
-      --surface:     #222220;
-      --surface-2:   #2e2d2a;
-      --border:      #464440;
-      --text-1:      #f5f4f0;
-      --text-2:      #a8a49c;
-      --text-3:      #6b6762;
-      --accent:      #f59e0b;
-      --accent-soft: #201800;
-      --accent-text: #fcd34d;
-      --success:     #10b981;
-      --danger:      #f87171;
-      --info:        #38bdf8;
+      --surface:     #1b1c1e;
+      --surface-2:   #26282b;
+      --border:      #3a3d42;
+      --text-1:      #f1f2f4;
+      --text-2:      #a3a7ae;
+      --text-3:      #6b7078;
+      --accent:      #4682b4;
+      --accent-soft: #0e1822;
+      --accent-text: #9cc0de;
+      --success:     #4682b4;
+      --danger:      #a3a7ae;
+      --info:        #6f9fc8;
       --card-shadow:    0 2px 20px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.10);
       --card-shadow-lg: 0 8px 32px rgba(0,0,0,.6),  0 0 0 1px rgba(255,255,255,.15);
     }
@@ -127,7 +129,7 @@
       font-size: 12px; color: var(--text-2);
       display: flex; align-items: center; gap: 5px;
     }
-    .api-key-status.has-key { color: #4caf7d; }
+    .api-key-status.has-key { color: var(--accent); }
     .key-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
 
     /* ── NAV CONTROLS ── */
@@ -278,8 +280,8 @@
       transform: rotateY(180deg);
     }
     [data-theme="dark"] .card-back {
-      background: #201c0a;
-      border-color: rgba(245,158,11,.25);
+      background: var(--accent-soft);
+      border-color: rgba(70,130,180,.25);
     }
 
     /* Topic badge */
@@ -296,7 +298,7 @@
       border-radius: 6px;
       padding: 3px 7px;
     }
-    [data-theme="dark"] .card-topic-badge { background: rgba(245,158,11,.12); }
+    [data-theme="dark"] .card-topic-badge { background: rgba(70,130,180,.12); }
 
     /* Card word */
     .card-word {
@@ -409,7 +411,7 @@
       color: var(--accent-text);
     }
     [data-theme="dark"] .example-listen-btn.speaking {
-      background: rgba(245,158,11,.12);
+      background: rgba(70,130,180,.12);
       color: var(--accent);
     }
     .example-listen-btn .audio-wave { display: none; align-items: flex-end; gap: 2px; height: 11px; }
@@ -523,7 +525,7 @@
       color: var(--accent-text);
     }
     [data-theme="dark"] .audio-btn.speaking {
-      background: rgba(245,158,11,.12);
+      background: rgba(70,130,180,.12);
       color: var(--accent);
     }
     /* Animated sound wave bars inside button */
@@ -592,25 +594,25 @@
     .btn-delete-topic {
       background: var(--surface);
       border: 1px solid var(--border);
-      color: #e05555;
+      color: var(--text-2);
       flex-shrink: 0;
     }
-    .btn-delete-topic:hover { background: rgba(224,85,85,.12); border-color: #e05555; }
+    .btn-delete-topic:hover { color: var(--text-1); border-color: var(--text-2); }
     /* Delete individual card button — sits top-right of card-scene */
     .card-delete-btn {
       position: absolute;
       top: 10px; right: 10px;
       z-index: 10;
-      background: rgba(224,85,85,.13);
-      border: 1px solid rgba(224,85,85,.25);
-      color: rgba(220,70,70,0.9);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text-2);
       padding: 6px;
       border-radius: 8px;
       cursor: pointer;
       transition: color .15s, background .15s, border-color .15s;
       line-height: 0;
     }
-    .card-delete-btn:hover { color: #ff4444; background: rgba(224,85,85,.22); border-color: rgba(224,85,85,.5); }
+    .card-delete-btn:hover { color: var(--text-1); border-color: var(--text-2); }
     .btn-primary {
       background: var(--accent);
       color: #fff;
@@ -673,6 +675,8 @@
       padding: 1px 5px; font-size: 11px;
     }
     .import-actions { display: flex; gap: 8px; align-items: center; }
+    .backup-row { display: flex; gap: 8px; align-items: center; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 2px; }
+    .backup-meta { font-size: 12px; color: var(--text-2); flex: 1; }
     .import-count { font-size: 12px; color: var(--text-2); flex: 1; }
     .panel-title {
       font-size: 14px;
@@ -717,7 +721,7 @@
       border-color: var(--accent);
       color: var(--accent-text);
     }
-    [data-theme="dark"] .tab-btn.active { color: var(--accent); background: rgba(245,158,11,.1); }
+    [data-theme="dark"] .tab-btn.active { color: var(--accent); background: rgba(70,130,180,.1); }
 
     /* Footer */
     /*.footer-attr — removed per user request */
@@ -879,10 +883,10 @@
     </div>
     <div style="display:flex;gap:8px;align-items:center">
       <button class="theme-toggle" id="apiKeyBtn" aria-label="Set API key" title="AI Settings">
-        <span id="apiKeyIcon">🔑</span>
+        <span id="apiKeyIcon" style="display:flex"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M17 6l3 3M14 9l2 2"/></svg></span>
       </button>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <span id="themeIcon">☀️</span>
+        <span id="themeIcon" style="display:flex"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></span>
         <span id="themeLabel">Light</span>
       </button>
     </div>
@@ -891,7 +895,7 @@
   <!-- API KEY MODAL -->
   <div class="modal-backdrop hidden" id="apiKeyModal">
     <div class="modal-box">
-      <h2>🔑 AI Card Generation</h2>
+      <h2>AI Card Generation</h2>
       <p>Enter your API key to enable AI card generation. Get one free at <a href="https://www.perplexity.ai/settings/api" target="_blank" style="color:var(--accent)">perplexity.ai/settings/api</a>.</p>
       <input type="password" id="apiKeyInput" placeholder="pplx-…" autocomplete="off" spellcheck="false" />
       <div class="api-key-status" id="apiKeyStatus">
@@ -907,13 +911,13 @@
   <!-- NAV CONTROLS -->
   <div class="nav-controls">
     <div class="nav-row">
-      <div class="select-wrap" style="flex:1.2">
+      <div class="select-wrap" style="flex:1.4;min-width:0">
         <select id="topicSelect" aria-label="Select topic"></select>
       </div>
       <button class="btn btn-icon btn-delete-topic" id="deleteTopicBtn" title="Delete current topic" aria-label="Delete current topic">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V2.5A.5.5 0 0 1 5.5 2h5a.5.5 0 0 1 .5.5V4M6 7v5M10 7v5M3.5 4l.8 9.5a.5.5 0 0 0 .5.5h6.4a.5.5 0 0 0 .5-.5L12.5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <input type="text" id="newTopicInput" placeholder="New topic…" style="flex:1" aria-label="Enter new topic name" />
+      <input type="text" id="newTopicInput" placeholder="New topic…" style="flex:1;min-width:0;width:auto" aria-label="Enter new topic name" />
       <button class="btn btn-secondary btn-icon" id="addTopicBtn" title="Create topic + auto-generate cards" aria-label="Create new topic">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
@@ -921,18 +925,18 @@
     <div class="nav-row">
       <div class="select-wrap" style="flex:1">
         <select id="dialectSelect" aria-label="Select Spanish dialect">
-          <option value="Colombia" selected>🇨🇴 Colombia</option>
-          <option value="Mexico">🇲🇽 Mexico</option>
-          <option value="Spain">🇪🇸 Spain</option>
-          <option value="Argentina">🇦🇷 Argentina</option>
-          <option value="Peru">🇵🇪 Peru</option>
-          <option value="Chile">🇨🇱 Chile</option>
-          <option value="Universal">🌎 Universal</option>
+          <option value="Colombia" selected>Colombia</option>
+          <option value="Mexico">Mexico</option>
+          <option value="Spain">Spain</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Peru">Peru</option>
+          <option value="Chile">Chile</option>
+          <option value="Universal">Universal</option>
         </select>
       </div>
       <div class="mode-pills" role="group" aria-label="Card display mode">
-        <button class="mode-pill active" id="modeEn" data-mode="en">🇬🇧 English first</button>
-        <button class="mode-pill" id="modeEs" data-mode="es">🇪🇸 Spanish first</button>
+        <button class="mode-pill active" id="modeEn" data-mode="en">English first</button>
+        <button class="mode-pill" id="modeEs" data-mode="es">Spanish first</button>
       </div>
     </div>
   </div>
@@ -1068,11 +1072,18 @@
       <button class="btn btn-primary" id="importBtn" style="font-size:13px;padding:8px 18px">Import Cards</button>
     </div>
     <div style="display:flex;gap:8px;align-items:center;padding-top:4px">
-      <span style="font-size:12px;color:var(--text-2)">Upload CSV / TSV:</span>
+      <span style="font-size:12px;color:var(--text-2)">Upload CSV / TSV or backup:</span>
       <label class="btn btn-secondary" style="font-size:12px;padding:6px 12px;cursor:pointer">
         Choose File
-        <input type="file" id="importFileInput" accept=".csv,.tsv,.txt" style="display:none" />
+        <input type="file" id="importFileInput" accept=".csv,.tsv,.txt,.json,application/json" style="display:none" />
       </label>
+    </div>
+    <div class="backup-row">
+      <span class="backup-meta" id="backupMeta"></span>
+      <button class="btn btn-primary" id="exportBtn" style="font-size:13px;padding:8px 16px">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 10V2M4.5 5.5 8 2l3.5 3.5M2.5 10.5v2a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Export All Cards
+      </button>
     </div>
 
   </div>
@@ -2142,7 +2153,7 @@ document.getElementById("exampleSentence").addEventListener("click", async (e) =
   tapHint.textContent = "Translating…";
   const result = await translateToEnglish(card.example);
   if (result) {
-    translEl.textContent     = "🇬🇧 " + result;
+    translEl.textContent     = "" + result;
     translEl.dataset.cached  = card.example;
     translEl.classList.add("visible");
     tapHint.style.display = "none";
@@ -2334,11 +2345,11 @@ function updateApiKeyUI() {
   if (key) {
     statusEl.classList.add("has-key");
     statusText.textContent = "Key saved — AI generation active";
-    icon.textContent = "✅";
+    icon.style.color = "var(--accent)";
   } else {
     statusEl.classList.remove("has-key");
     statusText.textContent = "No key saved — using local vocab banks";
-    icon.textContent = "🔑";
+    icon.style.color = "";
   }
 }
 
@@ -2366,7 +2377,7 @@ document.getElementById("apiKeySave").addEventListener("click", () => {
   localStorage.setItem(LS_API_KEY, val);
   updateApiKeyUI();
   document.getElementById("apiKeyModal").classList.add("hidden");
-  showToast("✓ API key saved — AI generation enabled", 3000);
+  showToast("API key saved — AI generation enabled", 3000);
 });
 
 document.getElementById("apiKeyClear").addEventListener("click", () => {
@@ -2384,17 +2395,25 @@ document.getElementById("apiKeyInput").addEventListener("focus", function() {
 /* ============================================================
    AI CARD GENERATION (direct browser → Perplexity API)
 ============================================================ */
+let lastGenError = "";
+
+function normWord(w) {
+  return String(w || "").toLowerCase().trim()
+    .replace(/^(el|la|los|las|un|una|unos|unas|the|a|an|to)\s+/i, "")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9ñ ]/g, "").trim();
+}
+
 async function generateCardsViaAI(topic, existing) {
+  lastGenError = "";
   const apiKey = getApiKey();
   if (!apiKey) {
-    // No key — fall back silently to local banks
-    return generateCardsForTopic(topic, existing);
+    const local = generateCardsForTopic(topic, existing);
+    if (!local.length) lastGenError = "Add your API key (key icon, top right) to auto-add more cards";
+    return local;
   }
 
-  // Use human-readable label for better AI topic understanding
   const topicName = topicLabel(topic);
-  const existingEnglish = existing.map(c => c.en);
-  const existingStr = existingEnglish.slice(0, 40).join(", ") || "none";
   const dialectNote = {
     "Colombia":  "Use Colombian Spanish (standard Latin American, natural Bogotá/Medellín register).",
     "Mexico":    "Use Mexican Spanish vocabulary and expressions.",
@@ -2405,78 +2424,78 @@ async function generateCardsViaAI(topic, existing) {
     "Universal": "Use neutral, universal Spanish understood across all regions.",
   }[dialect] || "Use neutral Latin American Spanish.";
 
-  const prompt = `You are a Spanish language teacher creating flashcards for an adult English speaker.
+  // Track every word already in the topic (both languages) so nothing repeats
+  const seenEn = new Set(existing.map(c => normWord(c.en)));
+  const seenEs = new Set(existing.map(c => normWord(c.es)));
+  const collected = [];
+  const TARGET = 20;
+
+  for (let attempt = 0; attempt < 3 && collected.length < TARGET; attempt++) {
+    const avoid = [...existing, ...collected].map(c => c.es).join(", ") || "none";
+    const need = TARGET - collected.length;
+    const prompt = `You are a Spanish language teacher creating flashcards for an adult English speaker.
 
 Topic: "${topicName}"
 Dialect: ${dialectNote}
-Already have (do NOT repeat): ${existingStr}
 
-Generate exactly 20 Spanish vocabulary flashcards for the topic "${topicName}".
-Choose words and phrases that are genuinely relevant and useful for this specific topic.
+The learner ALREADY HAS these words — do NOT use any of them, or close variants of them:
+${avoid}
+
+Generate ${need + 10} NEW Spanish vocabulary flashcards for the topic "${topicName}".
+Go beyond the most obvious basics: include less common nouns, useful verbs, adjectives and everyday phrases related to this topic.
 
 Return ONLY a valid JSON array — no markdown, no explanation, no code fences.
 Each object must have exactly:
 - "en": English word or short phrase
 - "es": Spanish translation (with article if a noun, e.g. "el perro")
-- "example": a natural Spanish sentence using the word (15-25 words)
+- "example": a natural Spanish sentence using the word (10-20 words)
 
 [
   {"en": "example", "es": "el ejemplo", "example": "Este es un ejemplo de una oración natural en español."}
 ]`;
 
-  try {
-    const res = await fetch("https://api.perplexity.ai/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "sonar",
-        messages: [
-          { role: "system", content: "You are a Spanish language teacher. Respond ONLY with a raw JSON array. No markdown. No code fences. No explanation. No citations. Just the JSON array starting with [ and ending with ]." },
-          { role: "user", content: prompt }
-        ],
-        temperature: 0.1,
-        max_tokens: 4000,
-      }),
-    });
+    try {
+      const res = await fetch("https://api.perplexity.ai/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "sonar",
+          messages: [
+            { role: "system", content: "You are a Spanish language teacher. Respond ONLY with a raw JSON array. No markdown. No code fences. No explanation. No citations. Just the JSON array starting with [ and ending with ]." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.7,
+          max_tokens: 5000,
+        }),
+      });
 
-    if (res.status === 401) {
-      showToast("❌ Invalid API key — check your key in 🔑 settings", 4000);
-      return generateCardsForTopic(topic, existing);
+      if (res.status === 401) { lastGenError = "Invalid API key — check it in the key settings"; break; }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+      let raw = (data.choices?.[0]?.message?.content || "").trim();
+      raw = raw.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "");
+      const s0 = raw.indexOf("["), s1 = raw.lastIndexOf("]");
+      if (s0 === -1 || s1 === -1) throw new Error("No JSON array in response");
+      const parsed = JSON.parse(raw.slice(s0, s1 + 1).replace(/\[\d+\]/g, ""));
+
+      for (const c of parsed) {
+        if (!c || !c.en || !c.es) continue;
+        const ne = normWord(c.en), ns = normWord(c.es);
+        if (!ne || !ns || seenEn.has(ne) || seenEs.has(ns)) continue;
+        seenEn.add(ne); seenEs.add(ns);
+        collected.push({ en: String(c.en).trim(), es: String(c.es).trim(), example: String(c.example || "").trim() });
+        if (collected.length >= TARGET) break;
+      }
+    } catch (err) {
+      console.warn("AI generation error:", err);
+      lastGenError = `AI error: ${err.message}`;
     }
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-    const data = await res.json();
-    const raw = data.choices?.[0]?.message?.content?.trim() || "";
-    if (!raw) throw new Error("Empty response from API");
-
-    // Robustly extract JSON array — handles markdown fences, leading text, citations
-    let jsonStr = raw;
-    // Strip markdown code fences
-    jsonStr = jsonStr.replace(/```(?:json)?\s*/gi, "").replace(/```/g, "");
-    // Extract just the [...] array portion
-    const arrStart = jsonStr.indexOf("[");
-    const arrEnd   = jsonStr.lastIndexOf("]");
-    if (arrStart === -1 || arrEnd === -1) throw new Error("No JSON array found in response");
-    jsonStr = jsonStr.slice(arrStart, arrEnd + 1);
-    const parsed = JSON.parse(jsonStr);
-
-    const existSet = new Set(existingEnglish.map(e => e.toLowerCase()));
-    const cards = parsed
-      .filter(c => c.en && c.es && c.example && !existSet.has(c.en.toLowerCase()))
-      .map(c => ({ en: String(c.en).trim(), es: String(c.es).trim(), example: String(c.example).trim() }))
-      .slice(0, 20);
-
-    if (cards.length === 0) throw new Error("No valid cards in response");
-    return cards;
-
-  } catch (err) {
-    console.warn("Perplexity API error:", err);
-    showToast(`⚠️ AI error: ${err.message} — using local vocab`, 4000);
-    return generateCardsForTopic(topic, existing);
   }
+
+  if (collected.length) return collected;
+  if (!lastGenError) lastGenError = "The AI only returned words you already have — try again";
+  return [];
 }
 
 /**
@@ -2500,7 +2519,7 @@ async function triggerAutoGenerate(topic, isNewTopic) {
 
   if (!newCards.length) {
     setAILoading(false);
-    showToast("No new cards to add — all vocabulary already added!");
+    showToast(lastGenError || "Couldn't generate new cards — try again", 4500);
     isGenerating = false;
     return;
   }
@@ -2522,7 +2541,7 @@ async function triggerAutoGenerate(topic, isNewTopic) {
 
   setAILoading(false);
   renderCard();
-  showToast(`✓ Added ${newCards.length} cards to ${label}`, 3000);
+  showToast(`Added ${newCards.length} cards to ${label}`, 3000);
   isGenerating = false;
 }
 
@@ -2565,6 +2584,8 @@ function setActiveTab(tab) {
   });
   document.getElementById("addPanel").classList.toggle("hidden", tab !== "tabAdd");
   document.getElementById("importPanel").classList.toggle("hidden", tab !== "tabImport");
+  if (tab === "tabImport") updateBackupMeta();
+  document.getElementById("focusBtn").style.visibility = tab === "tabStudy" ? "" : "hidden";
 }
 
 document.getElementById("tabStudy").addEventListener("click", () => setActiveTab("tabStudy"));
@@ -2612,6 +2633,7 @@ document.getElementById("importFileInput").addEventListener("change", (e) => {
   const reader = new FileReader();
   reader.onload = (ev) => {
     const text = ev.target.result;
+    if (restoreBackup(text)) return;
     // Convert to pipe-format for display (keeps textarea editable)
     document.getElementById("importTextarea").value = text;
     updateImportCount();
@@ -2655,13 +2677,93 @@ document.getElementById("importBtn").addEventListener("click", () => {
   renderCard();
 
   const dupeNote = dupes > 0 ? ` (${dupes} duplicate${dupes !== 1 ? "s" : ""} skipped)` : "";
-  showToast(`✓ Imported ${toAdd.length} cards into ${topicLabel(topic)}${dupeNote}`, 3500);
+  showToast(`Imported ${toAdd.length} cards into ${topicLabel(topic)}${dupeNote}`, 3500);
 
   // Clear textarea and go to study
   document.getElementById("importTextarea").value = "";
   updateImportCount();
   setActiveTab("tabStudy");
 });
+
+/* ─── BACKUP: EXPORT & RESTORE ─── */
+function backupStats() {
+  const topics = Object.keys(cardData).filter(t => (cardData[t] || []).length);
+  const cards = topics.reduce((n, t) => n + cardData[t].length, 0);
+  return { topics: topics.length, cards };
+}
+
+function updateBackupMeta() {
+  const { topics, cards } = backupStats();
+  document.getElementById("backupMeta").textContent =
+    `${cards} card${cards !== 1 ? "s" : ""} in ${topics} topic${topics !== 1 ? "s" : ""}`;
+}
+
+document.getElementById("exportBtn").addEventListener("click", async () => {
+  const topics = {};
+  for (const t in cardData) {
+    if ((cardData[t] || []).length) topics[t] = { label: topicLabel(t), cards: cardData[t] };
+  }
+  const backup = { app: "espanol-flashcards", version: 1, exported: new Date().toISOString(), topics };
+  const json = JSON.stringify(backup, null, 2);
+  const date = new Date().toISOString().slice(0, 10);
+  const filename = `espanol-flashcards-backup-${date}.json`;
+  const { cards } = backupStats();
+
+  // iPhone/iPad: open the share sheet so it can be saved to Files, Drive, email, etc.
+  try {
+    const file = new File([json], filename, { type: "application/json" });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      await navigator.share({ files: [file], title: "Español flashcards backup" });
+      showToast(`Exported ${cards} cards`);
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return; // user closed the share sheet
+  }
+
+  // Everywhere else: plain file download
+  const url = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast(`Exported ${cards} cards`);
+});
+
+/** Returns true if the text was a backup file (handled), false otherwise. */
+function restoreBackup(text) {
+  let data;
+  try { data = JSON.parse(text); } catch { return false; }
+  if (!data || data.app !== "espanol-flashcards" || typeof data.topics !== "object") {
+    showToast("This file isn't an Español flashcards backup", 3500);
+    return true;
+  }
+  let added = 0, topicCount = 0;
+  for (const key in data.topics) {
+    const entry = data.topics[key];
+    const list = Array.isArray(entry) ? entry : (entry && entry.cards) || [];
+    const valid = list.filter(c => c && c.en && c.es)
+      .map(c => ({ en: String(c.en), es: String(c.es), example: String(c.example || "") }));
+    if (!valid.length) continue;
+    if (!cardData[key]) cardData[key] = [];
+    const have = new Set(cardData[key].map(c => (c.en + "|" + c.es).toLowerCase()));
+    let n = 0;
+    for (const c of valid) {
+      const k = (c.en + "|" + c.es).toLowerCase();
+      if (!have.has(k)) { have.add(k); cardData[key].push(c); n++; }
+    }
+    if (n) { added += n; topicCount++; }
+  }
+  if (!added) { showToast("Backup loaded — all cards were already here", 3500); return true; }
+  saveUserCards();
+  renderTopicSelects();
+  resetOrder();
+  renderCard();
+  updateBackupMeta();
+  showToast(`Restored ${added} card${added !== 1 ? "s" : ""} across ${topicCount} topic${topicCount !== 1 ? "s" : ""}`, 3500);
+  setActiveTab("tabStudy");
+  return true;
+}
 
 /* ─── DARK MODE ─── */
 document.getElementById("themeToggle").addEventListener("click", () => {
@@ -2671,7 +2773,7 @@ document.getElementById("themeToggle").addEventListener("click", () => {
 function setTheme(t) {
   document.documentElement.setAttribute("data-theme", t);
   localStorage.setItem(LS_THEME, t);
-  document.getElementById("themeIcon").textContent  = t === "dark" ? "🌙" : "☀️";
+  document.getElementById("themeIcon").innerHTML  = t === "dark" ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>` : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>`;
   document.getElementById("themeLabel").textContent = t === "dark" ? "Dark" : "Light";
 }
 
@@ -2984,7 +3086,7 @@ document.getElementById("focusExampleSentence").addEventListener("click", async 
   tapHint.textContent = "Translating…";
   const result = await translateToEnglish(card.example);
   if (result) {
-    translEl.textContent    = "🇬🇧 " + result;
+    translEl.textContent    = "" + result;
     translEl.dataset.cached = card.example;
     translEl.classList.add("visible");
     tapHint.style.display = "none";
